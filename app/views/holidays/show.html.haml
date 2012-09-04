@@ -1,0 +1,18 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @holiday.name
+%p
+  %b Day:
+  = @holiday.day
+%p
+  %b Duty starts:
+  = @holiday.duty_starts
+%p
+  %b Duty ends:
+  = @holiday.duty_ends
+
+= link_to 'Edit', edit_holiday_path(@holiday)
+\|
+= link_to 'Back', holidays_path

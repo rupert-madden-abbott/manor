@@ -1,0 +1,69 @@
+- content_for :actionbar do
+  - if Rotum.updatable_by? current_user
+    - if @rotum.assigned?
+      = link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-warning"
+    - else
+      = link_to "Assign Duties", assign_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+
+- content_for :infobar do
+  %li
+    Click
+    %strong Add Preference
+    to request that a duty is not assigned to you or to let other senior residents know that you can't do a duty already assigned to you
+  %li.divider
+  %li.alert-success.alert
+    %strong Green:
+    This duty has been assigned to you
+  %li.divider
+  %li.alert-error.alert
+    %strong Red:
+    You've asked not to do this duty but it's been assigned to you anyway (Sorry!)
+  %li.divider
+  %li.alert
+    %strong Orange:
+    Another Senior Resident has asked not to do this duty but it's been assigned to them anyway. Help them out by offering to swap!
+
+.page-header.center
+  %h1
+    = link_to("<<", @rotum.previous) if @rotum.previous
+    = link_to("Current", rotum_path("current"))
+    = "Rota"
+    = link_to(">>", @rotum.next) if @rotum.next
+  %h2
+    = @rotum.name
+
+%table.table
+  %thead
+    %tr
+      %th Date
+      %th Time
+      %th Name
+      %th Actions
+  %tbody
+    - @rotum.duties.each do |duty|
+      - preference = current_user.find_preference_by_duty duty
+      - assigned = duty.users.select { |user| user  == current_user }
+      - other_conflict = duty.users.select { |user| user.find_preference_by_duty(duty) }
+      - if assigned.present? && preference.present?
+        - klass = 'alert alert-error'
+      - elsif assigned.present?
+        - klass = 'alert alert-success'
+      - elsif other_conflict.present?
+        - klass = 'alert'
+      - else
+        - klass = ''
+      %tr{ class: klass }
+        %td= duty.day_str
+        %td= duty.times_str
+        - if duty.users.empty?
+          %td Unassigned
+        - else
+          %td= duty.users.map { |user| user.name }.join(", ")
+        %td
+          - if preference.present?
+            = link_to "Remove Preference", preference_path(preference), method: :delete, class: 'btn btn-mini btn-danger'
+          - else
+            = simple_form_for Preference.new do |f|
+              = f.association :user, as: :hidden, input_html: { value: current_user.id }
+              = f.association :duty, as: :hidden, input_html: { value: duty.id }
+              = f.submit "Add Preference", class: 'btn btn-mini btn-primary'

@@ -1,0 +1,29 @@
+- attributes = model.attributes.reject do |key|
+  - %w(id updated_at created_at).include? key
+- model_name = model.class.model_name.downcase
+
+.page-header
+  %h1= model.class.model_name.human.pluralize
+
+%table.table.table-striped
+  %thead
+    %tr
+      - attributes.each do |attribute, value|
+        %th= model.class.human_attribute_name(attribute)
+      %th Actions
+  %tbody
+    - models.each do |model|
+      %tr
+        - attributes.each do |attribute, value|
+          - if attribute.include? "_id"
+            %td= link_to model.send(attribute.chomp("_id").to_sym).name, model.send(attribute.chomp("_id"))
+          - elsif attribute == "name"
+            %td= link_to model.send(attribute), send("#{model_name.pluralize}_path")
+          - else
+            %td= model.send(attribute)
+        %td
+          = link_to "Edit", send("edit_#{model_name}_path", model), class: 'btn btn-mini'
+          = link_to "Destroy", send("#{model_name}_path", model), method: :delete, confirm: "Are you sure?", class: 'btn btn-mini btn-danger'
+
+.form-actions
+  = link_to "New", send("new_#{model_name}_path"), class: 'btn btn-primary'

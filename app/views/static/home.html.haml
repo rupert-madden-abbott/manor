@@ -1,0 +1,10 @@
+- if user_signed_in?
+  hello
+- else
+  %h1 Welcome to the Manor Hall Administration Website
+  %p This website provides a number of administrative functions for Manor Hall staff.
+  :markdown
+    If you are a member of staff, please #{link_to 'sign in', new_user_session_path}.
+
+    Otherwise, the main Manor website can be found #{link_to 'here', 'http://www.bristol.ac.uk/manor/'}.
+

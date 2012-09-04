@@ -1,0 +1,18 @@
+- class_name = model.class.model_name
+- model_name = class_name.downcase
+- plural_model_name = model_name.pluralize
+- attributes = model.attributes.reject do |key|
+  - %w(id created_at updated_at).include? key
+.page-header
+  %h1= class_name.human
+
+- attributes.each do |attribute, value|
+  %p
+    %strong= model.class.human_attribute_name(attribute) + ':'
+    %br
+    = value
+
+.form-actions
+  = link_to "Back", send("#{plural_model_name}_path"), class: 'btn'
+  = link_to "Edit", send("edit_#{model_name}_path", model), class: 'btn'
+  = link_to "Destroy", send("#{model_name}_path", model), method: "delete", confirm: 'Are you sure?', class: 'btn btn-danger'

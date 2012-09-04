@@ -1,0 +1,22 @@
+- content_for :actionbar do
+  = link_to 'New Rotum', new_rotum_path, class: 'btn btn-primary'
+
+
+.page-header
+  %h1 Rota
+
+%table.table.table-striped
+  %tr
+    %th Name
+    %th Actions
+
+  - @rota.each do |rotum|
+    %tr
+      %td= link_to rotum.name, rotum_path(rotum)
+      %td
+        = link_to 'Edit', edit_rotum_path(rotum), class: 'btn btn-mini'
+        = link_to 'Destroy', rotum, :confirm => 'Are you sure?', :method => :delete, class: 'btn btn-mini btn-danger'
+
+%br
+
+
