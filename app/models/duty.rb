@@ -13,7 +13,7 @@ class Duty < ActiveRecord::Base
   end
 
   def day_str
-    day.strftime('%d/%m/%Y %A')
+    day.strftime('%A %d %B %Y')
   end
 
   def starts_str

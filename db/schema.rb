@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120902174038) do
+ActiveRecord::Schema.define(:version => 20120905121448) do
 
   create_table "duties", :force => true do |t|
     t.time     "starts"
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(:version => 20120902174038) do
 
   add_index "duties_users", ["duty_id", "user_id"], :name => "index_duties_users_on_duty_id_and_user_id", :unique => true
 
-  create_table "holidays", :force => true do |t|
+  create_table "events", :force => true do |t|
     t.string   "name"
     t.date     "day"
     t.time     "duty_starts"

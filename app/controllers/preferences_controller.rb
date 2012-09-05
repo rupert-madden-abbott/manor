@@ -1,6 +1,7 @@
 class PreferencesController < ApplicationController
   before_filter :authenticate_user!
   authorize_actions_for Preference
+
   def index
     @preferences = Preference.all
   end
@@ -23,17 +24,16 @@ class PreferencesController < ApplicationController
     if @preference.save
       redirect_to :back, notice: 'Preference added.'
     else
-      render action: "new"
+      render :new
     end
   end
 
   def update
     @preference = Preference.find(params[:id])
-
     if @preference.update_attributes(params[:preference])
       redirect_to @preference, notice: 'Preference was successfully updated.'
     else
-      render action: "edit"
+      render :edit
     end
   end
 

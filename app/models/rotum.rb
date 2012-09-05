@@ -8,15 +8,25 @@ class Rotum < ActiveRecord::Base
   self.authorizer_name = 'RotumAuthorizer'
 
   def self.current
-    where(assigned: true).order(:starts).last || last
+    where("ends < ?", Date.today).limit(1).order(:ends).last || last
   end
 
-  def previous
-    self.class.first(conditions: ["starts < ?", starts], order: "starts desc")
+  def self.next(rotum, offset = 0)
+    where("starts >= ?", rotum.ends).order(:starts).offset(offset).first
   end
 
-  def next
-    self.class.first(conditions: ["starts > ?", starts], order: "starts asc")
+  def self.previous(rotum, offset = 0)
+    where("ends <= ?", rotum.starts).order(:starts).offset(offset).last
+  end
+
+  def self.find_relative(id)
+    if id == 'current'
+      @rotum = Rotum.current
+    elsif id == 'next'
+      @rotum = Rotum.next(Rotum.current)
+    else
+      @rotum = Rotum.find(id)
+    end
   end
 
   def name
@@ -29,5 +39,34 @@ class Rotum < ActiveRecord::Base
 
   def ends_str
     ends.strftime('%d %B %Y')
+  end
+
+  def dates
+    (starts..ends).to_a
+  end
+
+  def create_with_duties
+    if valid?
+      events = Event.in(dates)
+      events.each do |event|
+        dates.delete(event.day)
+        duties.build day: event.day, starts: event.duty_starts, ends: event.duty_ends
+      end
+
+      dates.each do |date|
+        if date.saturday?
+          duties.build day: date, starts: time(12), ends: time(7)
+        elsif date.sunday?
+          duties.build day: date, starts: time(8), ends: time(17)
+          duties.build day: date, starts: time(17), ends: time(7)
+        else
+          duties.build day: date, starts: time(19), ends: time(7)
+        end
+      end
+
+      save
+    else
+      false
+    end
   end
 end

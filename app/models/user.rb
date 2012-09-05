@@ -27,14 +27,14 @@ class User < ActiveRecord::Base
     roles.map { |role| role.name }.join(' ')
   end
 
-  def active_for_authentication?
-    super
-  end
-
   def find_preference_by_duty(duty)
     preferences.select do |preference|
       preference.duty_id == duty.id
     end.first
+  end
+
+  def next_duty
+    @next_duty ||= duties.where("day >= ?", Date.today).order('day asc').first
   end
 #  def inactive_message
 #    self.deleted_at.nil? ? super : :account_has_been_deactivated

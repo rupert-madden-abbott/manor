@@ -24,13 +24,11 @@
     Another Senior Resident has asked not to do this duty but it's been assigned to them anyway. Help them out by offering to swap!
 
 .page-header.center
-  %h1
-    = link_to("<<", @rotum.previous) if @rotum.previous
-    = link_to("Current", rotum_path("current"))
-    = "Rota"
-    = link_to(">>", @rotum.next) if @rotum.next
+  %h1= "Rota #{@rotum.name}"
   %h2
-    = @rotum.name
+    = link_to_if @previous_rotum, "<<", @previous_rotum
+    = link_to("Current Rota", rotum_path("current"))
+    = link_to_if @next_rotum, ">>", @next_rotum
 
 %table.table
   %thead

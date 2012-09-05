@@ -32,4 +32,5 @@ group :development do
   gem 'rack-livereload'
   gem 'guard-livereload'
   gem 'quiet_assets'
+  gem 'rails_best_practices'
 end

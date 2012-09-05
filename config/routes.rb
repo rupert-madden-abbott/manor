@@ -6,7 +6,7 @@ Manor::Application.routes.draw do
 
   resources :preferences
   resources :duties
-  resources :holidays
+  resources :events
   resources :rota do
     member do
       put :assign
