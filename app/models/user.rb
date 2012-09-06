@@ -15,6 +15,10 @@ class User < ActiveRecord::Base
   include Authority::UserAbilities
   include Authority::Abilities
 
+  def to_s
+    name
+  end
+
   def current_sign_in
     current_sign_in_at.strftime("%H:%M %d/%m/%Y") if current_sign_in_at.present?
   end
@@ -36,6 +40,15 @@ class User < ActiveRecord::Base
   def next_duty
     @next_duty ||= duties.where("day >= ?", Date.today).order('day asc').first
   end
+
+  def can?(model, *actions)
+    actions.any? { |action| send("can_#{action}?", model) }
+  end
+
+  def can_write?(model)
+    can?(model, *[:create, :update, :delete])
+  end
+
 #  def inactive_message
 #    self.deleted_at.nil? ? super : :account_has_been_deactivated
 #  end

@@ -1,3 +1,5 @@
+HashSyntaxCheck: { }
+LongLineCheck: { max_line_length: 80 }
 MoveFinderToNamedScopeCheck: { }
 UseModelAssociationCheck: { }
 UseScopeAccessCheck: { }
@@ -31,3 +33,5 @@ RemoveUnusedMethodsInControllersCheck: { except_methods: [] }
 RemoveUnusedMethodsInHelpersCheck: { except_methods: [] }
 NotUseTimeAgoInWordsCheck: { }
 ProtectMassAssignmentCheck: { }
+UseParenthesesInMethodDefCheck: { }
+# UseBeforeFilterCheck: { customize_count: 2 }

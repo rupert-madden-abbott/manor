@@ -8,8 +8,8 @@ class Duty < ActiveRecord::Base
   resourcify
   include Authority::Abilities
 
-  def name
-    "#{day_str} #{times_str}"
+  def to_s
+    day_str
   end
 
   def day_str

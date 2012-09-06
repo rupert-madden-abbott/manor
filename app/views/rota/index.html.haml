@@ -1,22 +1,19 @@
-- content_for :actionbar do
-  = link_to 'New Rotum', new_rotum_path, class: 'btn btn-primary'
+- if current_user.can_create? Rotum
+  - content_for :actionbar do
+    = link_to 'New Rotum', new_rotum_path, class: 'btn btn-primary'
 
-
-.page-header
-  %h1 Rota
+= header_for_index(@rota)
 
 %table.table.table-striped
   %tr
     %th Name
-    %th Actions
+    - if current_user.can? Rotum, :update, :delete
+      %th Actions
 
   - @rota.each do |rotum|
     %tr
-      %td= link_to rotum.name, rotum_path(rotum)
-      %td
-        = link_to 'Edit', edit_rotum_path(rotum), class: 'btn btn-mini'
-        = link_to 'Destroy', rotum, :confirm => 'Are you sure?', :method => :delete, class: 'btn btn-mini btn-danger'
-
-%br
-
-
+      %td= link_to_show rotum
+      - if current_user.can? Rotum, :update, :delete
+        %td
+          = link_to_edit rotum
+          = link_to_destroy rotum

@@ -1,26 +1,22 @@
+= header_for_index @duties
+
 %table.table.table-striped
   %thead
     %tr
-      %th Date
+      %th Name
       %th Time
       %th Name
       %th Actions
   %tbody
     - @duties.each do |duty|
-      - preference = current_user.preferences.select { |preference| preference.duty_id == duty.id }.first
-      %tr{ class: preference.nil? ? '' : 'emphasis' }
-        %td= duty.day_str
+      %tr
+        %td= link_to_show(duty)
         %td= duty.times_str
-        - if duty.users.empty?
-          %td Unassigned
-        - else
-          %td= duty.users.map { |k,v| user.name }.join(", ")
         %td
-          - if preference.nil?
-            = simple_form_for Preference.new do |f|
-              = f.association :user, as: :hidden, input_html: { value: current_user.id }
-              = f.association :duty, as: :hidden, input_html: { value: duty.id }
-              = f.submit "Add Preference", class: 'btn btn-mini btn-primary'
+          - if duty.users.empty?
+            Unassigned
           - else
-            = link_to "Remove Preference", preference_path(preference), method: :delete, class: 'btn btn-mini btn-danger'
-
+            = duty.users.map { |user| user.name }.join(", ")
+        %td
+          = link_to_edit(duty)
+          = link_to_delete(duty)
