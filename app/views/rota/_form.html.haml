@@ -1,9 +1,7 @@
 = simple_form_for(rotum) do |f|
-  = f.error_notification
-
   .form-inputs
     = f.input :starts
-    = f.input :ends
-
+    = f.input :ends, default: Date.today.at_end_of_month
   .form-actions
-    = f.button :submit
+    = f.button :submit, class: 'btn-primary'
+    = link_to_index(@rotum)

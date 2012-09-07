@@ -1,9 +1,12 @@
-- content_for :actionbar do
-  - if Rotum.updatable_by? current_user
-    - if @rotum.assigned?
-      = link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-warning"
-    - else
-      = link_to "Assign Duties", assign_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+- if current_user.can_update?(Rotum) || current_user.can_delete?(Rotum)
+  - content_for :actionbar do
+    - if current_user.can_update? Rotum
+      - if @rotum.assigned?
+        = link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-warning"
+      - else
+        = link_to "Assign Duties", assign_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+    - if current_user.can_delete? Rotum
+      = link_to_destroy(@rotum)
 
 - content_for :infobar do
   %li
@@ -30,6 +33,33 @@
     = link_to("Current Rota", rotum_path("current"))
     = link_to_if @next_rotum, ">>", @next_rotum
 
+- if current_user.has_any_role? :dw, :admin
+  %table.table.table-striped
+    %thead
+      %tr
+        %th Name
+        %th Monday
+        %th Tuesday
+        %th Wednesday
+        %th Thursdaay
+        %th Friday
+        %th Saturday
+        %th Sunday
+        %th Total
+    %tbody
+      - User.for_assignment.each do |user|
+        - duties = user.duties.select { |duty| duty.rotum_id = @rotum.id }
+        %tr
+          %td= user.name
+          %td= duties.select { |duty| duty.day.monday? }.count
+          %td= duties.select { |duty| duty.day.tuesday? }.count
+          %td= duties.select { |duty| duty.day.wednesday? }.count
+          %td= duties.select { |duty| duty.day.thursday? }.count
+          %td= duties.select { |duty| duty.day.friday? }.count
+          %td= duties.select { |duty| duty.day.saturday? }.count
+          %td= duties.select { |duty| duty.day.sunday? }.count
+          %td= duties.count
+
 %table.table
   %thead
     %tr
@@ -39,7 +69,8 @@
       %th Actions
   %tbody
     - @rotum.duties.each do |duty|
-      - preference = current_user.find_preference_by_duty duty
+      - if current_user.can?(Preference, :create, :delete)
+        - preference = current_user.find_preference_by_duty duty
       - assigned = duty.users.select { |user| user  == current_user }
       - other_conflict = duty.users.select { |user| user.find_preference_by_duty(duty) }
       - if assigned.present? && preference.present?
@@ -59,8 +90,8 @@
           %td= duty.users.map { |user| user.name }.join(", ")
         %td
           - if preference.present?
-            = link_to "Remove Preference", preference_path(preference), method: :delete, class: 'btn btn-mini btn-danger'
-          - else
+            = link_to_destroy(preference, "Remove Preference")
+          - elsif current_user.can_create?(Preference)
             = simple_form_for Preference.new do |f|
               = f.association :user, as: :hidden, input_html: { value: current_user.id }
               = f.association :duty, as: :hidden, input_html: { value: duty.id }

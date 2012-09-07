@@ -3,7 +3,7 @@ class DutiesController < ApplicationController
   authorize_actions_for Duty
 
   def index
-    @duties = Duty.all
+    @duties = Duty.includes(:users).all
   end
 
   def show

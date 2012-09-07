@@ -51,17 +51,16 @@ class RotaController < ApplicationController
     @users = User.for_assignment
 
     @rotum.duties.each do |duty|
+      last_selected = nil
       selected = @users.shuffle.min_by do |user|
-        has_preference = user.preferences.select do |preference|
-          preference.duty_id = duty.id
-        end.present?
-        if has_preference
-          5000 + user.duties.size
-        else
-          user.duties.size
+        duty_count = user.duties.size + user.duties.select { |duty| duty.day.saturday? || duty.day.sunday? }.count + user.duties.select { |duty| duty.day.sunday? }.count
+        if user.preferences.scoped.where(duty_id: duty.id).first || user == last_selected
+          duty_count += 5000
         end
+        duty_count
       end
       selected.duties << duty
+      last_selected = selected
     end
 
     @rotum.assigned = true
