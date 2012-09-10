@@ -35,3 +35,7 @@ group :development do
   gem 'rails_best_practices'
   gem 'bullet'
 end
+
+group :production do
+  gem 'newrelic_rpm'
+end
