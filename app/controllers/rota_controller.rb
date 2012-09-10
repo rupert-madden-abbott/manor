@@ -49,16 +49,21 @@ class RotaController < ApplicationController
   def assign
     @rotum = Rotum.includes(:duties).find(params[:id])
     @users = User.for_assignment
+    @duties = @rotum.duties
+    #.sort_by do |duty|
+    #  [-duty.weight, -duty.preferences.size]
+    #end
 
-    @rotum.duties.each do |duty|
-      last_selected = nil
-      selected = @users.shuffle.min_by do |user|
-        duty_count = user.duties.size + user.duties.select { |duty| duty.day.saturday? || duty.day.sunday? }.count + user.duties.select { |duty| duty.day.sunday? }.count
-        if user.preferences.scoped.where(duty_id: duty.id).first || user == last_selected
-          duty_count += 5000
-        end
-        duty_count
+    last_selected = nil
+    @duties.each do |duty|
+      selected = @users.min_by do |user|
+        [
+          user.preferences.where(duty_id: duty).present? ? 1 : 0,
+          user == last_selected ? 1 : 0,
+          user.duty_weight
+        ]
       end
+
       selected.duties << duty
       last_selected = selected
     end
@@ -66,7 +71,7 @@ class RotaController < ApplicationController
     @rotum.assigned = true
     @rotum.save
 
-    redirect_to rotum_url(@rotum)
+    redirect_to @rotum, notice: "Duties assigned"
   end
 
   def unassign
@@ -75,6 +80,6 @@ class RotaController < ApplicationController
     @rotum.assigned = false
     @rotum.save
 
-    redirect_to rotum_url(@rotum)
+    redirect_to @rotum, notice: "Duties unassigned"
   end
 end

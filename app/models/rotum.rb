@@ -68,6 +68,10 @@ class Rotum < ActiveRecord::Base
     end
   end
 
+  def duty_weight
+    duties.sum { |duty| duty.weight }
+  end
+
   private
   def time(hour = 0, min = 0)
     Time.now.utc.change({ hour: hour, min: min })

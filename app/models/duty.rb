@@ -1,5 +1,5 @@
 class Duty < ActiveRecord::Base
-  has_many :preferences
+  has_many :preferences, dependent: :destroy
   has_and_belongs_to_many :users
   belongs_to :rotum
 
@@ -26,5 +26,31 @@ class Duty < ActiveRecord::Base
 
   def times_str
     "#{starts_str} - #{ends_str}"
+  end
+
+  def saturday?
+    day.saturday?
+  end
+
+  def sunday?
+    day.sunday?
+  end
+
+  def weekend?
+    day.saturday? || day.sunday?
+  end
+
+  def weight
+    if day.saturday?
+      3
+    elsif day.sunday?
+      2
+    else
+      1
+    end
+  end
+
+  def preference_count
+    preferences.size
   end
 end

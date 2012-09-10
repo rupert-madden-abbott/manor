@@ -1,4 +1,4 @@
-- if current_user.can_update?(Rotum) || current_user.can_delete?(Rotum)
+- if current_user.can?(Rotum, :update, :delete)
   - content_for :actionbar do
     - if current_user.can_update? Rotum
       - if @rotum.assigned?
@@ -46,6 +46,7 @@
         %th Saturday
         %th Sunday
         %th Total
+        %th Weighted Total
     %tbody
       - User.for_assignment.each do |user|
         - duties = user.duties.select { |duty| duty.rotum_id = @rotum.id }
@@ -59,6 +60,7 @@
           %td= duties.select { |duty| duty.day.saturday? }.count
           %td= duties.select { |duty| duty.day.sunday? }.count
           %td= duties.count
+          %td= duties.count + duties.select { |duty| duty.day.saturday? || duty.day.sunday? }.count + duties.select { |duty| duty.day.saturday? }.count
 
 %table.table
   %thead
@@ -66,6 +68,8 @@
       %th Date
       %th Time
       %th Name
+      - if current_user.can?(Rotum, :update, :delete)
+        %th Preferences
       %th Actions
   %tbody
     - @rotum.duties.each do |duty|
@@ -88,6 +92,12 @@
           %td Unassigned
         - else
           %td= duty.users.map { |user| user.name }.join(", ")
+        - if current_user.can?(Rotum, :update, :delete)
+          - preferences = duty.preferences
+          - if preferences.empty?
+            %td None
+          - else
+            %td= preferences.map { |p| p.user.name }.join(", ")
         %td
           - if preference.present?
             = link_to_destroy(preference, "Remove Preference")

@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :preferences
+  has_many :preferences, dependent: :destroy
   has_and_belongs_to_many :duties
 
   attr_accessible :name, :username, :role_ids, :roles
@@ -48,6 +48,21 @@ class User < ActiveRecord::Base
   def can_write?(model)
     can?(model, *[:create, :update, :delete])
   end
+
+  def duty_weight
+    duties.sum { |duty| duty.weight }
+  end
+
+  def days_to_duty(date)
+    close_duties = duties.where("day <= ? AND day >= ?", date + 6, date - 6)
+    if close_duties.present?
+      duty = close_duties.min_by { |duty| (duty.day - date).abs }
+      (duty.day - date).abs
+    else
+      7
+    end
+  end
+
 
 #  def inactive_message
 #    self.deleted_at.nil? ? super : :account_has_been_deactivated
