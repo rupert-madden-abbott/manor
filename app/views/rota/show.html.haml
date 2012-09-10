@@ -38,29 +38,18 @@
     %thead
       %tr
         %th Name
-        %th Monday
-        %th Tuesday
-        %th Wednesday
-        %th Thursdaay
-        %th Friday
-        %th Saturday
-        %th Sunday
+        - Date::DAYNAMES.each do |day|
+          %th= day
         %th Total
         %th Weighted Total
     %tbody
       - User.for_assignment.each do |user|
-        - duties = user.duties.select { |duty| duty.rotum_id = @rotum.id }
         %tr
           %td= user.name
-          %td= duties.select { |duty| duty.day.monday? }.count
-          %td= duties.select { |duty| duty.day.tuesday? }.count
-          %td= duties.select { |duty| duty.day.wednesday? }.count
-          %td= duties.select { |duty| duty.day.thursday? }.count
-          %td= duties.select { |duty| duty.day.friday? }.count
-          %td= duties.select { |duty| duty.day.saturday? }.count
-          %td= duties.select { |duty| duty.day.sunday? }.count
-          %td= duties.count
-          %td= duties.count + duties.select { |duty| duty.day.saturday? || duty.day.sunday? }.count + duties.select { |duty| duty.day.saturday? }.count
+          - Date::DAYNAMES.each do |day|
+            %td= user.duties.select { |duty| Date::DAYNAMES[duty.day.wday] == day }.count
+          %td= user.duties.size
+          %td= user.duty_weight
 
 %table.table
   %thead
@@ -72,7 +61,7 @@
         %th Preferences
       %th Actions
   %tbody
-    - @rotum.duties.each do |duty|
+    - @rotum.duties.includes(preferences: :user).order(:day).each do |duty|
       - if current_user.can?(Preference, :create, :delete)
         - preference = current_user.find_preference_by_duty duty
       - assigned = duty.users.select { |user| user  == current_user }

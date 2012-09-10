@@ -11,16 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120905121448) do
+ActiveRecord::Schema.define(:version => 20120910215747) do
 
   create_table "duties", :force => true do |t|
     t.time     "starts"
     t.time     "ends"
     t.date     "day"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.integer  "user_id"
     t.integer  "rotum_id"
+    t.integer  "preferences_count"
   end
 
   add_index "duties", ["rotum_id"], :name => "rotum_id"
