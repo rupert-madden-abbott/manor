@@ -42,8 +42,8 @@ module ApplicationHelper
     end
   end
 
-  def header_for_index(model_array)
-    header_for model_array.first.class.name.pluralize
+  def header_for_index(model_class)
+    header_for model_class.name.pluralize
   end
 
   def header_for_show(model)

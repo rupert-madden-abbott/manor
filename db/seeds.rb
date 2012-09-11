@@ -8,27 +8,30 @@
 #
 
 admin = Role.find_or_create_by_name :admin
-w = Role.find_or_create_by_name :w
-ssa = Role.find_or_create_by_name :ssa
+staff = Role.find_or_create_by_name :staff
 dw = Role.find_or_create_by_name :dw
 sr = Role.find_or_create_by_name :sr
-am = Role.find_or_create_by_name :am
-porter = Role.find_or_create_by_name :porter
+manor = Role.find_or_create_by_name :manor
+richmond = Role.find_or_create_by_name :richmond
 
-User.create! [
-  { name: 'Martin J Crossley Evans', username: 'gsmjce', roles: [w] },
-  { name: 'Paul Sparrow', username: 'bupss', roles: [am] },
-  { name: 'Nikki Press', username: 'hrnhp', roles: [ssa] },
-  { name: 'Rupert Madden-Abbott', username: 'rm7088', roles: [admin, dw, sr] },
-  { name: 'Grant Ray', username: 'gw0667', roles: [sr] },
-  { name: 'Ryan Lethem', username: 'rl1595', roles: [sr] },
-  { name: 'Andrew Franks', username: 'af6536', roles: [sr] },
-  { name: 'Sham Amin', username: 'sa7187', roles: [sr] },
-  { name: 'Mina Skelly', username: 'ms9931', roles: [sr] },
-  { name: 'Molly Niu', username: 'drxmn', roles: [sr] },
-  { name: 'Lisa Collins', username: '', roles: [] },
-  { name: 'Will McCready', username: '', roles: [] },
-  { name: 'Christine Zhang', username: '', roles: [] },
-  { name: 'Dan Thomas', username: '', roles: [porter] },
-  { name: 'Roger Parsons', username: 'hrzjp', roles: [porter]
-  ]
+[
+  { name: 'Martin J Crossley Evans', username: 'gsmjce',
+    roles: [staff, manor] },
+  { name: 'Paul Sparrow', username: 'bupss', roles: [staff, manor] },
+  { name: 'Nikki Press', username: 'hrnhp', roles: [staff, manor] },
+  { name: 'Rupert Madden-Abbott', username: 'rm7088',
+    roles: [admin, dw, manor] },
+  { name: 'Grant Ray', username: 'gw0667', roles: [sr, manor] },
+  { name: 'Ryan Lethem', username: 'rl1595', roles: [sr, manor] },
+  { name: 'Andrew Franks', username: 'af6536', roles: [sr, manor] },
+  { name: 'Sham Amin', username: 'sa7187', roles: [sr, manor] },
+  { name: 'Mina Skelly', username: 'ms9931', roles: [sr, manor] },
+  { name: 'Molly Niu', username: 'drxmn', roles: [sr, manor] },
+  { name: 'Lisa Collins', username: 'lc0320', roles: [dw, richmond] },
+  { name: 'Will McCready', username: 'wm8196', roles: [sr, richmond] },
+  { name: 'Christine Zhang', username: 'eexnz', roles: [sr, richmond] },
+  { name: 'Dan Thomas', username: 'dt12491', roles: [staff, manor] },
+  { name: 'Roger Parsons', username: 'hrzjp', roles: [staff, manor] }
+].each do |user|
+  User.find_or_create_by_username! user
+end

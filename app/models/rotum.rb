@@ -10,11 +10,15 @@ class Rotum < ActiveRecord::Base
   scope :current, where("ends > ?", Date.today).includes(duties: { users: :preferences }).limit(1).order(:ends)
 
   def self.next(rotum, offset = 0)
-    where("starts >= ?", rotum.ends).order(:starts).offset(offset).first
+    if rotum.present?
+      where("starts >= ?", rotum.ends).order(:starts).offset(offset).first
+    end
   end
 
   def self.previous(rotum, offset = 0)
-    where("ends <= ?", rotum.starts).order(:starts).offset(offset).last
+    if rotum.present?
+      where("ends <= ?", rotum.starts).order(:starts).offset(offset).last
+    end
   end
 
   def self.find_relative(id)

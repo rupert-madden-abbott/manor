@@ -33,7 +33,7 @@
     = link_to("Current Rota", rotum_path("current"))
     = link_to_if @next_rotum, ">>", @next_rotum
 
-- if current_user.has_any_role? :dw, :admin
+- if current_user.can? Rotum, :update, :delete
   %table.table.table-striped
     %thead
       %tr

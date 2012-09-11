@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
-  authorize_actions_for User
+  authorize_actions_for User, actions: { revive: :destroy }
 
   def index
     deleted = params[:deleted] || false

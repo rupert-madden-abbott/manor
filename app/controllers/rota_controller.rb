@@ -10,6 +10,10 @@ class RotaController < ApplicationController
     @rotum = Rotum.find_relative(params[:id])
     @next_rotum = Rotum.next(@rotum)
     @previous_rotum = Rotum.previous(@rotum)
+
+    if @rotum.blank?
+      redirect_to rota_path, notice: "Rota does not exist"
+    end
   end
 
   def new
@@ -50,9 +54,6 @@ class RotaController < ApplicationController
     @rotum = Rotum.includes(:duties).find(params[:id])
     @users = User.for_assignment
     @duties = @rotum.duties
-    #.sort_by do |duty|
-    #  [-duty.weight, -duty.preferences.size]
-    #end
 
     last_selected = nil
     @duties.each do |duty|
