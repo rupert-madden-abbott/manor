@@ -7,8 +7,8 @@ class User < ActiveRecord::Base
   validates_presence_of :name, :username, :roles
   validates_uniqueness_of :username
 
-  scope :for_assignment, Role.where(name: :sr).first.users.joins(:roles)
-    .where(roles: { name: :manor } ).not_deleted.includes(:duties, :preferences)
+  scope :for_assignment, User.includes(:duties, :preferences).joins(:roles)
+    .where(roles: { name: :rota }).not_deleted
 
   devise :cas_authenticatable, :rememberable, :trackable
   rolify
