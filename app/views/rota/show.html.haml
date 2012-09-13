@@ -2,6 +2,10 @@
   - content_for :actionbar do
     - if current_user.can_update? Rotum
       - if @rotum.assigned?
+        - if @rotum.published?
+          = link_to "Unpublish", unpublish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+        - else
+          = link_to "Publish", publish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
         = link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-warning"
       - else
         = link_to "Assign Duties", assign_rotum_path(@rotum), method: :put, class: "btn btn-primary"
@@ -66,18 +70,18 @@
         - preference = current_user.find_preference_by_duty duty
       - assigned = duty.users.select { |user| user  == current_user }
       - other_conflict = duty.users.select { |user| user.find_preference_by_duty(duty) }
-      - if assigned.present? && preference.present?
-        - klass = 'alert alert-error'
-      - elsif assigned.present?
-        - klass = 'alert alert-success'
-      - elsif other_conflict.present?
-        - klass = 'alert'
-      - else
-        - klass = ''
+      - klass = ''
+      - if @rotum.published? || current_user.has_role?(:dw)
+        - if assigned.present? && preference.present?
+          - klass = 'alert alert-error'
+        - elsif assigned.present?
+          - klass = 'alert alert-success'
+        - elsif other_conflict.present?
+          - klass = 'alert'
       %tr{ class: klass }
         %td= duty.day_str
         %td= duty.times_str
-        - if duty.users.empty?
+        - if duty.users.empty? || (!@rotum.published? && !current_user.has_role?(:dw))
           %td Unassigned
         - else
           %td= duty.users.map { |user| user.name }.join(", ")

@@ -11,6 +11,8 @@ Manor::Application.routes.draw do
     member do
       put :assign
       put :unassign
+      put :publish
+      put :unpublish
     end
   end
 

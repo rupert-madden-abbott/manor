@@ -1,6 +1,6 @@
 class RotaController < ApplicationController
   before_filter :authenticate_user!
-  authorize_actions_for Rotum, actions: { assign: :update, unassign: :update }
+  authorize_actions_for Rotum, actions: { assign: :update, unassign: :update, publish: :update, unpublish: :update }
 
   def index
     @rota = Rotum.all
@@ -82,5 +82,21 @@ class RotaController < ApplicationController
     @rotum.save
 
     redirect_to @rotum, notice: "Duties unassigned"
+  end
+
+  def publish
+    @rotum = Rotum.find(params[:id])
+    @rotum.published = true
+    @rotum.save
+
+    redirect_to @rotum, notice: "Rota published"
+  end
+
+  def unpublish
+    @rotum = Rotum.find(params[:id])
+    @rotum.published = false
+    @rotum.save
+
+    redirect_to @rotum, notice: "Rota unpublished"
   end
 end
