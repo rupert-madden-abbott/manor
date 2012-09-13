@@ -65,7 +65,7 @@
         %th Preferences
       %th Actions
   %tbody
-    - @rotum.duties.includes(preferences: :user).order(:day).each do |duty|
+    - @rotum.duties.includes(preferences: :user).each do |duty|
       - if current_user.can?(Preference, :create, :delete)
         - preference = current_user.find_preference_by_duty duty
       - assigned = duty.users.select { |user| user  == current_user }

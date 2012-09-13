@@ -1,5 +1,5 @@
 class Rotum < ActiveRecord::Base
-  has_many :duties, dependent: :destroy
+  has_many :duties, dependent: :destroy, order: "day asc, starts asc"
 
   attr_accessible :ends, :starts
 
