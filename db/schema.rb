@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120910215747) do
+ActiveRecord::Schema.define(:version => 20120913090105) do
 
   create_table "duties", :force => true do |t|
     t.time     "starts"
@@ -68,8 +68,9 @@ ActiveRecord::Schema.define(:version => 20120910215747) do
     t.date     "starts"
     t.date     "ends"
     t.boolean  "assigned"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.boolean  "published",  :default => false
   end
 
   create_table "users", :force => true do |t|
