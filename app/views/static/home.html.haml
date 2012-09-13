@@ -5,7 +5,7 @@
         .thumbnail
           .caption
             %h2 Duty Rota
-            - if current_user.has_role :sr
+            - if current_user.has_role? :rota
               - if current_user.next_duty.present?
                 %p
                   Your next duty is on
