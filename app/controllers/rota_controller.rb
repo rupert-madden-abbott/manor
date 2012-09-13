@@ -62,6 +62,7 @@ class RotaController < ApplicationController
           user.preferences.where(duty_id: duty).present? ? 1 : 0,
           user == last_selected ? 1 : 0,
           user.duty_weight,
+          user.duties.size,
           -user.preferences.size
         ]
       end
