@@ -56,25 +56,41 @@ class RotaController < ApplicationController
     @duties = @rotum.duties
 
     last_selected = nil
+    @log = "<ul>"
     @duties.each do |duty|
+      @log += "<li>#{duty}"
+      @sublog = "<ul>"
       selected = @users.min_by do |user|
+        preference = user.preferences.where(duty_id: duty).present? ? 1 : 0
+        duty_yesterday = user == last_selected ? 1 : 0
+        duty_count = user.duties.select { |u_duty| u_duty.day.wday == duty.day.wday }.size
+        @sublog += "<li style='display:inline-block; width: 280px; margin: 5px'>#{user.name}<ul>"
+        @sublog += "<li>Preference?: #{preference == 1 ? 'Yes' : 'No'}</li>"
+        @sublog += "<li>Duty Yesterday?: #{duty_yesterday == 1 ? 'Yes' : 'No'}</li>"
+        @sublog += "<li>Duty Weight: #{user.duty_weight}</li>"
+        @sublog += "<li>Duty Count for #{duty.day.strftime("%A")}: #{duty_count}</li>"
+        @sublog += "<li>Preferences Count: #{user.preferences.size}</li>"
+        @sublog += "</ul></li>"
         [
-          user.preferences.where(duty_id: duty).present? ? 1 : 0,
-          user == last_selected ? 1 : 0,
+          preference,
+          duty_yesterday,
           user.duty_weight,
-          user.duties.size,
+          duty_count,
           -user.preferences.size
         ]
       end
 
       selected.duties << duty
       last_selected = selected
+      @log += " - #{selected}#{@sublog}</ul></li>"
     end
+    @log += "</ul>"
 
     @rotum.assigned = true
     @rotum.save
 
-    redirect_to @rotum, notice: "Duties assigned"
+    render inline: "#{@log}"
+    #redirect_to @rotum, notice: "Duties Assigned"
   end
 
   def unassign
