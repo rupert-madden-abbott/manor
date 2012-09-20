@@ -20,14 +20,20 @@
             %span.icon-bar
           = link_to "Manor", root_path, class: 'brand'
           .container.nav-collapse
-            %ul.nav
-              - if user_signed_in?
+            - if user_signed_in?
+              %ul.nav
                 %li= link_to "Users", users_path if current_user.can_read? User
                 %li= link_to "Duties", duties_path if current_user.can_read? Duty
                 %li= link_to "Rota", rota_path if current_user.can_read? Rotum
-                %li.pull-right= link_to "Sign Out", destroy_user_session_path
+              %ul.nav.pull-right
+                %li.navbar-text= "Welcome #{current_user.name}"
+                - if current_user.imposter?
+                  %li= link_to "Stop Impersonating", user_impersonator_path(current_user, current_user.impersonated_by), method: :delete
+                - else
+                  %li= link_to "Sign Out", destroy_user_session_path
               - else
-                %li.pull-right= link_to "Sign In", new_user_session_path
+                %ul.nav.pull-right
+                  %li= link_to "Sign In", new_user_session_path
 
     .container
       .content

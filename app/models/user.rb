@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   has_many :preferences, dependent: :destroy
   has_and_belongs_to_many :duties
 
+  attr_accessor :impersonated_by
   attr_accessible :name, :username, :role_ids, :roles
 
   validates_presence_of :name, :username, :roles
@@ -63,6 +64,9 @@ class User < ActiveRecord::Base
     end
   end
 
+  def imposter?
+    impersonated_by.present?
+  end
 
 #  def inactive_message
 #    self.deleted_at.nil? ? super : :account_has_been_deactivated

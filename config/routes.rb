@@ -18,6 +18,7 @@ Manor::Application.routes.draw do
 
   resources :users do
     put :revive, on: :member
+    resources :impersonators, only: [:new, :destroy]
   end
 
   # The priority is based upon order of creation:
