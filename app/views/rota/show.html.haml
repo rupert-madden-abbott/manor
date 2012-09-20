@@ -38,6 +38,7 @@
     = link_to_if @next_rotum, ">>", @next_rotum
 
 - if current_user.can? Rotum, :update, :delete
+  %h3 Duties / Preferences Summary
   %table.table.table-striped
     %thead
       %tr
@@ -47,12 +48,18 @@
         %th Total
         %th Weighted Total
     %tbody
-      - User.for_assignment.each do |user|
+      - User.for_assignment.includes(preferences: :duty).each do |user|
         %tr
           %td= user.name
           - Date::DAYNAMES.each do |day|
-            %td= user.duties.select { |duty| Date::DAYNAMES[duty.day.wday] == day }.count
-          %td= user.duties.size
+            - duty_count = user.duties.select do |duty|
+              - Date::DAYNAMES[duty.day.wday] == day
+            - end.size
+            - preference_count = user.preferences.select do |preference|
+              - Date::DAYNAMES[preference.duty.day.wday] == day
+            - end.size
+            %td= "#{duty_count} / #{preference_count}"
+          %td= "#{user.duties.size} / #{user.preferences.size}"
           %td= user.duty_weight
 
 %table.table
