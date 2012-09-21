@@ -7,6 +7,6 @@ class ApplicationAuthorizer < Authority::Authorizer
   # @param [Object] user - whatever represents the current user in your app
   # @return [Boolean]
   def self.default(adjective, user)
-    user.has_role?(:admin) || user.imposter?
+    user.has_role?(:admin)
   end
 end

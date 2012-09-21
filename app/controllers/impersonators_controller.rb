@@ -1,6 +1,6 @@
 class ImpersonatorsController < ApplicationController
   before_filter :authenticate_user!
-  authorize_actions_for ApplicationAuthorizer
+  authorize_actions_for ImpersonatorAuthorizer
 
   def new
     session[:admin_id] = current_user.id

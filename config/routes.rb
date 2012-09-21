@@ -1,6 +1,7 @@
 Manor::Application.routes.draw do
 
   root to: 'static#home'
+  match 'contacts' => 'users#index', as: :contacts
 
   devise_for :users
 

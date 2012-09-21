@@ -22,7 +22,7 @@
           .container.nav-collapse
             - if user_signed_in?
               %ul.nav
-                %li= link_to "Users", users_path if current_user.can_read? User
+                %li= link_to "People", users_path if current_user.can_read? User
                 %li= link_to "Duties", duties_path if current_user.can_read? Duty
                 %li= link_to "Rota", rota_path if current_user.can_read? Rotum
               %ul.nav.pull-right

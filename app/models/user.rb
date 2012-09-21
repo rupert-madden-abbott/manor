@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   include Authority::UserAbilities
   include Authority::Abilities
 
+  self.authorizer_name = 'UserAuthorizer'
+
   def to_s
     name
   end
