@@ -2,6 +2,11 @@
   = f.input :name
   = f.input :username
   = f.association :roles
+  = f.input :mobile
+  = f.input :extension
+  = f.input :email
+  = f.input :residence
+  = f.input :responsibilites
   .form-actions
     = f.button :submit, class: 'btn-primary'
     = link_to "Cancel", :back, class: 'btn'
