@@ -14,3 +14,9 @@ table form {
     margin-bottom: 0;
   }
 }
+@media (max-width: 480px) {
+  .sidebar-nav {
+    position: static;
+  }
+}
+
