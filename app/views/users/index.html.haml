@@ -12,25 +12,37 @@
   %thead
     %tr
       %th Name
-      %th Username
-      %th Roles
-      %th Sign in count
-      %th Current sign in
-      %th Last sign in
-      %th Actions
+      %th Email
+      %th Mobile
+      %th Extension
+      %th Residence
+      %th Responsibilities
+      - if current_user.can? User, :update, :delete
+        %th Username
+        %th Roles
+        %th Sign in count
+        %th Current sign in
+        %th Last sign in
+        %th Actions
   %tbody
     - @users.each do |user|
       %tr
-        %td= link_to user.name, user_path(user)
-        %td= user.username
-        %td= user.role_names
-        %td= user.sign_in_count
-        %td= user.current_sign_in
-        %td= user.last_sign_in
-        %td
-          = link_to "Edit", edit_user_path(user), class: 'btn btn-mini'
-          = link_to "Impersonate", new_user_impersonator_path(user), class: 'btn btn-warning btn-mini'
-          - if user.deleted?
-            = link_to "Revive", revive_user_path(user), method: :put, class: 'btn btn-mini btn-success'
-          - else
-            = link_to "Destroy", user_path(user), method: :delete, class: 'btn btn-mini btn-danger'
+        %td= user.name
+        %td= user.email
+        %td= user.mobile
+        %th= user.extension
+        %th= user.residence
+        %th= user.responsibilites
+        - if current_user.can? User, :update, :delete
+          %td= user.username
+          %td= user.role_names
+          %td= user.sign_in_count
+          %td= user.current_sign_in
+          %td= user.last_sign_in
+          %td
+            = link_to "Edit", edit_user_path(user), class: 'btn btn-mini'
+            = link_to "Impersonate", new_user_impersonator_path(user), class: 'btn btn-warning btn-mini'
+            - if user.deleted?
+              = link_to "Revive", revive_user_path(user), method: :put, class: 'btn btn-mini btn-success'
+            - else
+              = link_to "Destroy", user_path(user), method: :delete, class: 'btn btn-mini btn-danger'

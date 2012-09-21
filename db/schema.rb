@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120913090105) do
+ActiveRecord::Schema.define(:version => 20120921155726) do
 
   create_table "duties", :force => true do |t|
     t.time     "starts"
@@ -85,6 +85,11 @@ ActiveRecord::Schema.define(:version => 20120913090105) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "extension"
+    t.string   "mobile"
+    t.string   "residence"
+    t.string   "email"
+    t.string   "responsibilites"
   end
 
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
