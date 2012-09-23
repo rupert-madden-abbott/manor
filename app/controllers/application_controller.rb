@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   helper_method :time
 
   def populate_impersonatables
-    if current_user.can_manage? User
+    if user_signed_in? && current_user.can_manage?(User)
       @impersonatables = User.all
     end
   end
