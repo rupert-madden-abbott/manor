@@ -41,24 +41,22 @@ table form {
 
 .navbar .nav li {
   .btn {
+    color: white;
     border-radius: 0;
     margin: 0;
     border: none;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    &:hover {
-      background-position: 0 -15px;
-      -webkit-transition: background-position 0.1s linear;
-      -moz-transition: background-position 0.1s linear;
-      -o-transition: background-position 0.1s linear;
-      transition: background-position 0.1s linear;
-    }
   }
-  .btn-primary {
-    color: white;
-    background-color: #006DCC;
-    &:hover {
-      color: white;
-      background-color: #04C;
-    }
+  .btn:hover { color:white }
+  .btn-mini {
+    font-size: inherit;
+    line-height: inherit
   }
+
+  .btn-primary:hover { background-color: #04C; }
+  .btn-info:hover { background-color: #2F96B4; }
+  .btn-success:hover { background-color: #51A351; }
+  .btn-warning:hover { background-color: #F89406; }
+  .btn-danger:hover { background-color: #BD362F; }
+  .btn-inverse:hover { background-color: #222; }
 }
