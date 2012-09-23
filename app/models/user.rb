@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   validates_presence_of :name, :username, :roles
   validates_uniqueness_of :username
 
+  scope :archived, User.deleted
+  scope :active, User.not_deleted
   scope :for_assignment, User.includes(:duties, :preferences).joins(:roles)
     .where(roles: { name: :rota }).not_deleted
 

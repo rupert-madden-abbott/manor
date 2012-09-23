@@ -57,4 +57,41 @@ module ApplicationHelper
   def header_for_edit(model)
     header_for "Edit #{model}"
   end
+
+  def filtered?
+    params[:filters].present?
+  end
+
+  def filtered_by?(filter)
+    Array.wrap(params[:filters]).include? filter.to_s
+  end
+
+  def filters
+    Array.wrap(params[:filters]).join(", ")
+  end
+
+  def filter_dropdown_for(model_class, *filters)
+    content_tag(:li, class: filtered? ? "active dropdown" : "dropdown") do
+      content_tag(:a, class: "dropdown-toggle", data: { toggle: "dropdown" },
+        href: "#") do
+          ("Filter" + content_tag(:strong, '', class: "caret")).html_safe
+      end +
+      content_tag(:ul, class: "dropdown-menu") do
+        filters.collect do |filter|
+          if filtered_by?(filter)
+            content_tag(:li, class: "active") do
+              link_to filter.to_s.titleize,
+                send("#{model_class.name.downcase.pluralize}_path")
+            end
+          else
+            content_tag(:li) do
+              link_to filter.to_s.titleize,
+                send("#{model_class.name.downcase.pluralize}_path",
+                  filters: :archived)
+            end
+          end
+        end.join("").html_safe
+      end
+    end
+  end
 end

@@ -3,11 +3,11 @@ class UsersController < ApplicationController
   authorize_actions_for User, actions: { revive: :destroy }
 
   def index
-    deleted = params[:deleted] || false
-    if deleted
-      @users = User.deleted.includes(:roles)
-    else
-      @users = User.not_deleted.includes(:roles)
+    @users = User.includes(:roles)
+    if params[:filters].present?
+      Array.wrap(params[:filters]).each do |filter|
+        @users = @users.send(filter)
+      end
     end
   end
 
