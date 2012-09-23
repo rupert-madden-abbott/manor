@@ -7,30 +7,18 @@ class Rotum < ActiveRecord::Base
   include Authority::Abilities
   self.authorizer_name = 'RotumAuthorizer'
 
-  scope :current, where("ends > ?", Date.today).includes(duties: { users: :preferences }).limit(1).order(:ends)
+  scope :current, where("ends > ?", Date.today).order(:ends).limit(1)
   scope :complete, includes(duties: { users: :preferences })
   scope :admin, includes(duties: { preferences: :user })
+  scope :next, where("starts >= ?", Date.today).order(:starts).limit(1)
+  scope :previous, where("ends <= ?", Date.today).order(:starts).limit(1)
 
-  def self.next(rotum, offset = 0)
-    if rotum.present?
-      where("starts >= ?", rotum.ends).order(:starts).offset(offset).first
-    end
+  def next(offset = 0)
+    self.class.where("starts >= ?", ends).order(:starts).offset(offset).first
   end
 
-  def self.previous(rotum, offset = 0)
-    if rotum.present?
-      where("ends <= ?", rotum.starts).order(:starts).offset(offset).last
-    end
-  end
-
-  def self.find_relative(id)
-    if id == 'current'
-      @rotum = Rotum.current.first || Rotum.last
-    elsif id == 'next'
-      @rotum = Rotum.next(Rotum.current.first)
-    else
-      @rotum = Rotum.find(id)
-    end
+  def previous(offset = 0)
+    self.class.where("ends <= ?", starts).order(:starts).offset(offset).last
   end
 
   def to_s

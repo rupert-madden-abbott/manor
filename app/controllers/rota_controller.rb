@@ -11,9 +11,16 @@ class RotaController < ApplicationController
     if current_user.can? Rotum, :update, :delete
       @rotum = @rotum.admin
     end
-    @rotum = @rotum.find(params[:id])
-    @next_rotum = Rotum.next(@rotum)
-    @previous_rotum = Rotum.previous(@rotum)
+    @rotum = case params[:id]
+      when 'current'
+        @rotum.current.first
+      when 'next'
+        @rotum.next.first
+      when 'previous'
+        @rotum.previous.first
+      else
+        @rotum.find(params[:id])
+    end
 
     if @rotum.blank?
       redirect_to rota_path, notice: "Rota does not exist"

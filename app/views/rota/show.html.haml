@@ -33,9 +33,9 @@
 .center
   = header_for_show(@rotum)
   %h2
-    = link_to_if @previous_rotum, "<<", @previous_rotum
-    = link_to("Current Rota", rotum_path("current"))
-    = link_to_if @next_rotum, ">>", @next_rotum
+    = link_to_if @rotum.previous.present?, "<<", @rotum.previous
+    = link_to_unless current_page?(rotum_path("current")), "Current", rotum_path("current")
+    = link_to_if @rotum.next.present?, ">>", @rotum.next
 
 - if current_user.can? Rotum, :update, :delete
   %h3 Duties / Preferences Summary
