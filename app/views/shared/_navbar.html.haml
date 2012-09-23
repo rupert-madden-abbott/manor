@@ -1,0 +1,35 @@
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{ data: { target: ".nav-collapse", toggle: "collapse" } }
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      = link_to "Manor", root_path, class: 'brand'
+      .nav-collapse
+        - if user_signed_in?
+          %ul.nav
+            - if current_user.can_read? User
+              = active_link_to 'People', users_path, wrap_tag: :li
+            - if current_user.can_read? Rotum
+              = active_link_to 'Rota', rota_path, wrap_tag: :li
+          %ul.nav.pull-right
+            %li
+              %span.navbar-text Welcome #{current_user.name}
+            - if current_user.imposter?
+              %li= link_to "Stop Impersonating", |
+                user_impersonator_path(current_user, |
+                current_user.impersonated_by), method: :delete
+            - else
+              - if current_user.can_manage? User
+                %li.dropdown
+                  %a.dropdown-toggle{ data: { toggle: "dropdown" }, href: "#" }
+                    Impersonate
+                    %b.caret
+                  %ul.dropdown-menu
+                    = content_tag_for :li, users do |user|
+                      = link_to user.name, new_user_impersonator_path(user)
+              %li= link_to "Sign Out", destroy_user_session_path
+          - else
+            %ul.nav.pull-right
+              %li= link_to "Sign In", new_user_session_path

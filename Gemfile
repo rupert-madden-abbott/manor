@@ -15,6 +15,7 @@ gem 'haml-rails'
 gem 'simple_form'
 gem 'rdiscount'
 gem 'client_side_validations', '3.2.0.beta.6', git: 'https://github.com/bcardarella/client_side_validations.git'
+gem 'active_link_to'
 
 group :assets do
   gem 'jquery-rails'

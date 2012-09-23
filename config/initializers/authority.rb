@@ -43,7 +43,8 @@ Authority.configure do |config|
       :read   => 'readable',
       :update => 'updatable',
       :delete => 'deletable',
-      :write => 'writable'
+      :write => 'writable',
+      :manage => 'manageable'
     }
 
   # SECURITY_VIOLATION_HANDLER
