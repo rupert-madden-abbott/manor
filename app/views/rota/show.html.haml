@@ -48,7 +48,7 @@
         %th Total
         %th Weighted Total
     %tbody
-      - User.for_assignment.includes(preferences: :duty).each do |user|
+      - @users.each do |user|
         %tr
           %td= user.name
           - Date::DAYNAMES.each do |day|
@@ -72,7 +72,7 @@
         %th Preferences
       %th Actions
   %tbody
-    - @rotum.duties.includes(preferences: :user).each do |duty|
+    - @rotum.duties.each do |duty|
       - if current_user.can?(Preference, :create, :delete)
         - preference = current_user.find_preference_by_duty duty
       - assigned = duty.users.select { |user| user  == current_user }

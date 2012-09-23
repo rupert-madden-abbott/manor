@@ -7,12 +7,20 @@ class RotaController < ApplicationController
   end
 
   def show
-    @rotum = Rotum.find_relative(params[:id])
+    @rotum = Rotum.complete
+    if current_user.can? Rotum, :update, :delete
+      @rotum = @rotum.admin
+    end
+    @rotum = @rotum.find(params[:id])
     @next_rotum = Rotum.next(@rotum)
     @previous_rotum = Rotum.previous(@rotum)
 
     if @rotum.blank?
       redirect_to rota_path, notice: "Rota does not exist"
+    end
+
+    if current_user.can? Rotum, :update, :delete
+      @users = User.for_assignment.includes(preferences: :duty)
     end
   end
 
