@@ -1,6 +1,19 @@
+body {
+  padding-bottom: 40px
+}
+
 .navbar {
   .navbar-text {
     padding: 0 15px;
+  }
+}
+
+.thumbnail {
+  .caption {
+    height: 150px;
+  }
+  .well {
+    margin-bottom: 0
   }
 }
 
@@ -26,3 +39,26 @@ table form {
   }
 }
 
+.navbar .nav li {
+  .btn {
+    border-radius: 0;
+    margin: 0;
+    border: none;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    &:hover {
+      background-position: 0 -15px;
+      -webkit-transition: background-position 0.1s linear;
+      -moz-transition: background-position 0.1s linear;
+      -o-transition: background-position 0.1s linear;
+      transition: background-position 0.1s linear;
+    }
+  }
+  .btn-primary {
+    color: white;
+    background-color: #006DCC;
+    &:hover {
+      color: white;
+      background-color: #04C;
+    }
+  }
+}

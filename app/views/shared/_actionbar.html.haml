@@ -1,0 +1,11 @@
+.navbar.navbar-fixed-bottom
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{ data: { target: ".nav-collapse", toggle: "collapse" } }
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      = link_to "Actions", "#", class: 'brand'
+      .nav-collapse
+        %ul.nav
+          = yield :actionbar

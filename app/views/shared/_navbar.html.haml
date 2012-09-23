@@ -10,7 +10,7 @@
         - if user_signed_in?
           %ul.nav
             - if current_user.can_read? User
-              = active_link_to 'People', users_path, wrap_tag: :li
+              = active_link_to 'Contacts', contacts_path, wrap_tag: :li
             - if current_user.can_read? Rotum
               = active_link_to 'Rota', rota_path, wrap_tag: :li
           %ul.nav.pull-right

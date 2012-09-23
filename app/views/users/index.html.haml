@@ -1,10 +1,15 @@
 - if current_user.can_create? User
   - content_for :actionbar do
-    = link_to "New User", new_user_path, class: 'btn btn-primary'
-    - if params[:deleted]
-      = link_to "Show Active Users", users_path, class: 'btn'
-    - else
-      = link_to "Show Deleted Users", users_path(deleted: true), class: 'btn'
+    %li= link_to "New User", new_user_path, class: 'btn btn-primary'
+    %li.dropdown
+      %a.dropdown-toggle{ data: { toggle: "dropdown" }, href: '#' }
+        Filter
+        %b.caret
+      %ul.dropdown-menu
+        - if params[:deleted]
+          %li= link_to "Active", users_path
+        - else
+          %li= link_to "Deleted", users_path(deleted: true)
 
 .page-header
   %h1= "People"

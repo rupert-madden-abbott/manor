@@ -17,17 +17,19 @@
       .content
         .row
           = bootstrap_flash
-          .span9
-            = yield
-          - if content_for?(:infobar) || content_for?(:actionbar)
+        .row
+          - if content_for?(:infobar)
+            .span9
+              = yield
             .span3
               %ul.sidebar-nav.nav.nav-list.well
-                - if content_for?(:actionbar)
-                  %li.nav-header Actions
-                  = yield :actionbar
-                - if content_for?(:infobar)
-                  %li.nav-header Info
-                  = yield :infobar
+                = yield :infobar
+          - else
+            .span12
+              = yield
+
+    - if content_for?(:actionbar)
+      = render "shared/actionbar"
 
     /
       Javascripts

@@ -12,17 +12,25 @@
                   %strong= current_user.next_duty.day_str
               - else
                 %p You don't have any upcoming duties!
-              %p You can submit preferences on the page for each rota
-            %p.center
-              = link_to "Check the Rota", rotum_path(:current), class: 'btn'
+              %p You can add preferences by checking the rota
+          %p.center.well
+            = link_to "Check the Rota", rotum_path(:current), class: 'btn'
     - if current_user.can_read? User
       %li.span4
         .thumbnail
           .caption
-            %h2 People
-            - if current_user.has_role? :sr
-              %p.center
-                = link_to "View Staff Contacts", users_path, class: 'btn'
+            %h2 Contacts
+            %p
+              %strong Security
+              %span.pull-right 01179287484
+            %p
+              %strong Duty
+              %span.pull-right 07748768430
+            %p
+              %strong Overnight
+              %span.pull-right 07824561522
+          %p.center.well
+            = link_to "View All Contacts", contacts_path, class: 'btn'
 - else
   %h1 Welcome to the Manor Hall Administration Website
   %p This website provides a number of administrative functions for Manor Hall staff.
