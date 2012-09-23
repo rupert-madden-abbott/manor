@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require rails.validations
+//= require twitter/bootstrap
 //= require_tree .
 (function() {
   $(document).ready(function() {
