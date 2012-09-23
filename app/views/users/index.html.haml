@@ -42,7 +42,6 @@
           %td= user.last_sign_in
           %td
             = link_to "Edit", edit_user_path(user), class: 'btn btn-mini'
-            = link_to "Impersonate", new_user_impersonator_path(user), class: 'btn btn-warning btn-mini'
             - if user.deleted?
               = link_to "Revive", revive_user_path(user), method: :put, class: 'btn btn-mini btn-success'
             - else

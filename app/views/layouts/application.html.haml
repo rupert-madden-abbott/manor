@@ -27,6 +27,14 @@
                 %li= link_to "Rota", rota_path if current_user.can_read? Rotum
               %ul.nav.pull-right
                 %li.navbar-text= "Welcome #{current_user.name}"
+                - if current_user.can_update? User
+                  %li.dropdown
+                    %a.dropdown-toggle{ data: { toggle: "dropdown" } }
+                      Impersonate
+                      %b.caret
+                    %ul.dropdown-menu
+                      - User.all.each do |user|
+                        %li= link_to user.name, new_user_impersonator_path(user)
                 - if current_user.imposter?
                   %li= link_to "Stop Impersonating", user_impersonator_path(current_user, current_user.impersonated_by), method: :delete
                 - else
