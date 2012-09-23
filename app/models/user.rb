@@ -3,7 +3,8 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :duties
 
   attr_accessor :impersonated_by
-  attr_accessible :name, :username, :role_ids, :roles
+  attr_accessible :name, :username, :role_ids, :roles, :email, :mobile,
+    :extension, :responsibilites, :residence
 
   validates_presence_of :name, :username, :roles
   validates_uniqueness_of :username
