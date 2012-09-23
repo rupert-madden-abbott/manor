@@ -9,7 +9,7 @@
         - if params[:deleted]
           %li= link_to "Active", users_path
         - else
-          %li= link_to "Deleted", users_path(deleted: true)
+          %li= link_to "Archived", users_path(deleted: true)
 
 .page-header
   %h1= "People"
@@ -50,4 +50,4 @@
             - if user.deleted?
               = link_to "Revive", revive_user_path(user), method: :put, class: 'btn btn-mini btn-success'
             - else
-              = link_to "Destroy", user_path(user), method: :delete, class: 'btn btn-mini btn-danger'
+              = link_to "Archive", user_path(user), method: :delete, class: 'btn btn-mini btn-danger'
