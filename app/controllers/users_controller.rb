@@ -3,7 +3,8 @@ class UsersController < ApplicationController
   authorize_actions_for User, actions: { revive: :destroy }
 
   def index
-    @users = User.includes(:roles)
+    @users = current_user.can_manage?(User) ? User.includes(:roles) : User.all
+
     if params[:filters].present?
       Array.wrap(params[:filters]).each do |filter|
         @users = @users.send(filter)
