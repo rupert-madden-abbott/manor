@@ -15,10 +15,8 @@
     - models.each do |model|
       %tr
         - attributes.each do |attribute, value|
-          - if attribute.include? "_id"
-            %td= link_to model.send(attribute.chomp("_id").to_sym).name, model.send(attribute.chomp("_id"))
-          - elsif attribute == "name"
-            %td= link_to model.send(attribute), send("#{model_name.pluralize}_path")
+          - if attribute == "name"
+            %td= link_to model.send(attribute), model
           - else
             %td= model.send(attribute)
         %td
