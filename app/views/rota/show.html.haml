@@ -32,7 +32,7 @@
 
 .center
   = header_for_show(@rotum)
-  %h2
+  %h2.nav
     = link_to_if @rotum.previous.present?, "<<", @rotum.previous
     = link_to_unless current_page?(rotum_path("current")), "Current", rotum_path("current")
     = link_to_if @rotum.next.present?, ">>", @rotum.next
@@ -65,12 +65,13 @@
 %table.table
   %thead
     %tr
-      %th Date
+      %th.right Date
       %th Time
       %th Name
       - if current_user.can?(Rotum, :update, :delete)
         %th Preferences
-      %th Actions
+      - if current_user.has_role?(:admin) || current_user.can?(Preference, :create, :delete)
+        %th.actions Actions
   %tbody
     - @rotum.duties.each do |duty|
       - if current_user.can?(Preference, :create, :delete)
@@ -86,7 +87,7 @@
         - elsif other_conflict.present?
           - klass = 'alert'
       %tr{ class: klass }
-        %td= duty.day_str
+        %td.right= duty.day_str
         %td= duty.times_str
         - if duty.users.empty? || (!@rotum.published? && !current_user.has_role?(:dw))
           %td Unassigned
@@ -98,16 +99,18 @@
             %td None
           - else
             %td= preferences.map { |p| p.user.name }.join(", ")
-        %td
-          - if current_user.has_role?(:admin)
+        - if current_user.has_role?(:admin)
+          %td.actions
             = simple_form_for Preference.new do |f|
               = f.association :duty, as: :hidden, input_html: { value: duty.id }
               = f.association :user, input_html: { value: current_user.id }
               = f.submit "Add Preference", class: 'btn btn-mini btn-primary'
-          - else
-            - if preference.present?
+        - else
+          - if preference.present?
+            %td.actions
               = link_to_destroy(preference, "Remove Preference")
-            - elsif current_user.can_create?(Preference)
+          - elsif current_user.can_create?(Preference)
+            %td.actions
               = simple_form_for Preference.new do |f|
                 = f.association :user, as: :hidden, input_html: { value: current_user.id }
                 = f.association :duty, as: :hidden, input_html: { value: duty.id }

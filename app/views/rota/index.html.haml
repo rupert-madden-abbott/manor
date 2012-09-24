@@ -8,12 +8,12 @@
   %tr
     %th Name
     - if current_user.can? Rotum, :update, :delete
-      %th Actions
+      %th.manage Actions
 
   - @rota.each do |rotum|
     %tr
       %td= link_to_show rotum
       - if current_user.can? Rotum, :update, :delete
-        %td
+        %td.actions
           = link_to_edit rotum
           = link_to_destroy rotum

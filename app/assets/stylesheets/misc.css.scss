@@ -26,6 +26,10 @@ table form {
   text-align:center
 }
 
+.right {
+  text-align: right !important;
+}
+
 .sidebar-nav {
   position: fixed;
 
@@ -59,4 +63,12 @@ table form {
   .btn-warning:hover { background-color: #F89406; }
   .btn-danger:hover { background-color: #BD362F; }
   .btn-inverse:hover { background-color: #222; }
+}
+
+@media print {
+  .navbar, .alert, .sidebar-nav, .actions, .nav { display: none }
+
+  .span9 {
+    width: 100%
+  }
 }
