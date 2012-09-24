@@ -9,7 +9,7 @@ class Rotum < ActiveRecord::Base
 
   scope :current, where("ends > ?", Date.today).order(:ends).limit(1)
   scope :complete, includes(duties: { users: :preferences })
-  scope :admin, includes(duties: { preferences: :user })
+  scope :admin, includes(duties: { preferences: [:user, { duty: :rotum }] })
   scope :next, where("starts >= ?", Date.today).order(:starts).limit(1)
   scope :previous, where("ends <= ?", Date.today).order(:starts).limit(1)
 

@@ -39,7 +39,7 @@
 
 - if current_user.can? Rotum, :update, :delete
   %h3 Duties / Preferences Summary
-  %table.table.table-striped
+  %table.table
     %thead
       %tr
         %th Name
@@ -49,7 +49,8 @@
         %th Weighted Total
     %tbody
       - @users.each do |user|
-        %tr
+        - submitted = user.preferences.any? { |p| p.duty.rotum == @rotum }
+        %tr{ class: (submitted ? "success" : "error") }
           %td= user.name
           - Date::DAYNAMES.each do |day|
             - duty_count = user.duties.select do |duty|
