@@ -1,4 +1,9 @@
 class User < ActiveRecord::Base
+  devise :cas_authenticatable, :rememberable, :trackable
+  rolify
+  include Authority::UserAbilities
+  include Authority::Abilities
+
   has_many :preferences, dependent: :destroy
   has_and_belongs_to_many :duties
 
@@ -9,15 +14,11 @@ class User < ActiveRecord::Base
   validates_presence_of :name, :username, :roles
   validates_uniqueness_of :username
 
-  scope :archived, User.deleted
-  scope :active, User.not_deleted
-  scope :for_assignment, User.includes(:duties, :preferences).joins(:roles)
-    .where(roles: { name: :rota }).not_deleted
+  scope :archived, deleted
+  scope :active, not_deleted
+  scope :on_rota, joins(:roles).where(roles: { name: :rota }).not_deleted
+  scope :for_assignment, on_rota.includes(:duties, :preferences)
 
-  devise :cas_authenticatable, :rememberable, :trackable
-  rolify
-  include Authority::UserAbilities
-  include Authority::Abilities
 
   self.authorizer_name = 'UserAuthorizer'
 
