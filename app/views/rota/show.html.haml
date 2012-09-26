@@ -88,7 +88,10 @@
         - elsif other_conflict.present?
           - klass = 'alert'
       %tr{ class: klass }
-        %td.right= duty.day_str
+        - if current_user.can_manage? Duty
+          %td.right= link_to duty.day_str, duty_path(duty)
+        - else
+          %td.right= duty.day_str
         %td= duty.times_str
         - if duty.users.empty? || (!@rotum.published? && !current_user.has_role?(:dw))
           %td Unassigned
@@ -100,19 +103,12 @@
             %td None
           - else
             %td= preferences.map { |p| p.user.name }.join(", ")
-        - if current_user.has_role?(:admin)
+        - if preference.present?
+          %td.actions
+            = link_to_destroy(preference, "Remove Preference")
+        - elsif current_user.can_create?(Preference)
           %td.actions
             = simple_form_for Preference.new do |f|
+              = f.association :user, as: :hidden, input_html: { value: current_user.id }
               = f.association :duty, as: :hidden, input_html: { value: duty.id }
-              = f.association :user, input_html: { value: current_user.id }
               = f.submit "Add Preference", class: 'btn btn-mini btn-primary'
-        - else
-          - if preference.present?
-            %td.actions
-              = link_to_destroy(preference, "Remove Preference")
-          - elsif current_user.can_create?(Preference)
-            %td.actions
-              = simple_form_for Preference.new do |f|
-                = f.association :user, as: :hidden, input_html: { value: current_user.id }
-                = f.association :duty, as: :hidden, input_html: { value: duty.id }
-                = f.submit "Add Preference", class: 'btn btn-mini btn-primary'
