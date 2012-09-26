@@ -1,12 +1,11 @@
 - if current_user.can?(Rotum, :update, :delete)
   - content_for :actionbar do
     - if current_user.can_update? Rotum
-      - if @rotum.assigned?
-        - if @rotum.published?
-          %li= link_to "Unpublish", unpublish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
-        - else
-          %li= link_to "Publish", publish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
-        %li= link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-warning"
+      - if @rotum.published?
+        %li= link_to "Unpublish", unpublish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+      - elsif @rotum.assigned?
+        %li= link_to "Publish", publish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+        %li= link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-danger"
       - else
         %li= link_to "Assign Duties", assign_rotum_path(@rotum), method: :put, class: "btn btn-primary"
     - if current_user.can_delete? Rotum
