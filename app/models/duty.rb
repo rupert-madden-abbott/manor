@@ -41,13 +41,7 @@ class Duty < ActiveRecord::Base
   end
 
   def weight
-    if day.saturday?
-      3
-    elsif day.sunday?
-      2
-    else
-      1
-    end
+    ((starts - ends) / 1.hour).round
   end
 
   def preference_count
