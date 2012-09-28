@@ -27,8 +27,12 @@
                     Impersonate
                     %b.caret
                   %ul.dropdown-menu
-                    = content_tag_for :li, users do |user|
-                      = link_to user.name, new_user_impersonator_path(user)
+                    - users.each do |role|
+                      %li.dropdown-submenu
+                        = link_to role.name, "#"
+                        %ul.dropdown-menu
+                          = content_tag_for :li, role.users do |user|
+                            = link_to user.name, new_user_impersonator_path(user)
               %li= link_to "Sign Out", destroy_user_session_path
           - else
             %ul.nav.pull-right

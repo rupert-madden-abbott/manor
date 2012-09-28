@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 
   def populate_impersonatables
     if user_signed_in? && current_user.can_manage?(User)
-      @impersonatables = User.all
+      @impersonatables = Role.includes(:users).order("roles.name, users.name").all
     end
   end
 end
