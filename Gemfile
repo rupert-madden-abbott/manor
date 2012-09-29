@@ -24,6 +24,7 @@ group :assets do
   gem 'therubyracer'
   gem 'uglifier', '>= 1.0.3'
   gem 'twitter-bootstrap-rails', '2.1.3'
+  gem 'jquery-datatables-rails'
 end
 
 group :development do

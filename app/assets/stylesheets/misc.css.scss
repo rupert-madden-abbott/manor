@@ -140,7 +140,8 @@ table form {
 }
 
 @media print {
-  .navbar, .alert, .sidebar-nav, .actions, .nav { display: none }
+  .navbar, .alert, .sidebar-nav, .actions, .nav, .dataTables_filter,
+  .dataTables_info { display: none }
 
   .span9 {
     width: 100%

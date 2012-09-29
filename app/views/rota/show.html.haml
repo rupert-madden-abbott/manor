@@ -38,7 +38,7 @@
 
 - if current_user.can? Rotum, :update, :delete
   %h3 Duties / Preferences Summary
-  %table.table
+  %table.table.datatable{ data: { paginate: "false", info: "false", filter: "false" } }
     %thead
       %tr
         %th Name
@@ -62,7 +62,7 @@
           %td= "#{user.duties.size} / #{user.preferences.size}"
           %td= user.duty_weight
 
-%table.table
+%table.table.datatable{ data: { paginate: "false", sort: "false" } }
   %thead
     %tr
       %th.right Date

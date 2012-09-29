@@ -14,8 +14,30 @@
 //= require jquery_ujs
 //= require rails.validations
 //= require twitter/bootstrap
+//= require dataTables/jquery.dataTables
+//= require dataTables/jquery.dataTables.bootstrap
 //= require_tree .
+
 (function() {
+  $.extend($.fn.dataTableExt.oStdClasses, {
+   "sStripeOdd": "",
+   "sStripeEven": "",
+  });
+
+  $(document).ready(function() {
+    $('.datatable').each(function() {
+      var data = $(this).data()
+      var options = {
+        "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+        "sPaginationType": "bootstrap",
+        "bInfo": data.info === undefined ? true : data.info,
+        "bPaginate": data.paginate === undefined ? true : data.paginate,
+        "bSort": data.sort === undefined ? true : data.sort,
+        "bFilter": data.filter === undefined ? true : data.filter
+      }
+      $(this).dataTable(options)
+    })
+  });
   $(document).ready(function() {
     return $("div.control-group").focusout(function() {
       if (!$("div.control-group").hasClass("error")) {
