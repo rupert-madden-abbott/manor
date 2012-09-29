@@ -27,7 +27,7 @@ class RotaController < ApplicationController
     end
 
     if current_user.can? Rotum, :update, :delete
-      @users = User.for_assignment.includes(preferences: :duty)
+      @users = User.for_assignment.includes(preferences: { duty: :rotum } )
     end
   end
 
