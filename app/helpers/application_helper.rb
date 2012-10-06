@@ -70,28 +70,34 @@ module ApplicationHelper
     Array.wrap(params[:filters]).join(", ")
   end
 
+  def filter_link_for(model_class, filter)
+    if filtered_by?(filter)
+      content_tag(:li, class: "active") do
+        link_to filter.to_s.titleize, send("#{model_class.table_name}_path")
+      end
+    else
+      content_tag(:li) do
+        link_to filter.to_s.titleize, send("#{model_class.table_name}_path",
+            filters: :archived)
+      end
+    end
+  end
+
+  def filter_dropdown_menu_for(model_class, *filters)
+    content_tag(:ul, class: "dropdown-menu") do
+      filters.collect do |filter|
+        filter_link_for(model_class, filter)
+      end.join("").html_safe
+    end
+  end
+
   def filter_dropdown_for(model_class, *filters)
     content_tag(:li, class: filtered? ? "active dropdown" : "dropdown") do
       content_tag(:a, class: "dropdown-toggle", data: { toggle: "dropdown" },
         href: "#") do
           ("Filter" + content_tag(:strong, '', class: "caret")).html_safe
       end +
-      content_tag(:ul, class: "dropdown-menu") do
-        filters.collect do |filter|
-          if filtered_by?(filter)
-            content_tag(:li, class: "active") do
-              link_to filter.to_s.titleize,
-                send("#{model_class.name.downcase.pluralize}_path")
-            end
-          else
-            content_tag(:li) do
-              link_to filter.to_s.titleize,
-                send("#{model_class.name.downcase.pluralize}_path",
-                  filters: :archived)
-            end
-          end
-        end.join("").html_safe
-      end
+      filter_dropdown_menu_for(model_class, *filters)
     end
   end
 end

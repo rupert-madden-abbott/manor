@@ -1,6 +1,11 @@
 class RotaController < ApplicationController
   before_filter :authenticate_user!
-  authorize_actions_for Rotum, actions: { assign: :update, unassign: :update, publish: :update, unpublish: :update }
+  authorize_actions_for Rotum, actions: {
+    assign: :update,
+    unassign: :update,
+    publish: :update,
+    unpublish: :update
+  }
 
   def index
     @rota = Rotum.all
@@ -67,45 +72,10 @@ class RotaController < ApplicationController
 
   def assign
     @rotum = Rotum.includes(:duties).find(params[:id])
-    @users = User.for_assignment
-    @duties = @rotum.duties
-
-    last_selected = nil
-    @log = "<ul>"
-    @duties.each do |duty|
-      @log += "<li>#{duty}"
-      @sublog = "<ul>"
-      selected = @users.min_by do |user|
-        preference = user.preferences.where(duty_id: duty).present? ? 1 : 0
-        duty_yesterday = user == last_selected ? 1 : 0
-        duty_count = user.duties.select { |u_duty| u_duty.day.wday == duty.day.wday }.size
-        @sublog += "<li style='display:inline-block; width: 280px; margin: 5px'>#{user.name}<ul>"
-        @sublog += "<li>Preference?: #{preference == 1 ? 'Yes' : 'No'}</li>"
-        @sublog += "<li>Duty Yesterday?: #{duty_yesterday == 1 ? 'Yes' : 'No'}</li>"
-        @sublog += "<li>Duty Weight: #{user.duty_weight}</li>"
-        @sublog += "<li>Duty Count for #{duty.day.strftime("%A")}: #{duty_count}</li>"
-        @sublog += "<li>Preferences Count: #{user.preferences.size}</li>"
-        @sublog += "</ul></li>"
-        [
-          preference,
-          duty_yesterday,
-          user.duty_weight,
-          duty_count,
-          -user.preferences.size
-        ]
-      end
-
-      selected.duties << duty
-      last_selected = selected
-      @log += " - #{selected}#{@sublog}</ul></li>"
-    end
-    @log += "</ul>"
-
-    @rotum.assigned = true
+    @rotum.assign_duties
     @rotum.save
 
-    render inline: "#{@log}"
-    #redirect_to @rotum, notice: "Duties Assigned"
+    redirect_to @rotum, notice: "Duties assigned"
   end
 
   def unassign

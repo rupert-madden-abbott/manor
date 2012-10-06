@@ -70,8 +70,26 @@ class User < ActiveRecord::Base
     end
   end
 
+  def duty_count_by(wday)
+    duties.select { |duty| duty.wday == wday }.size
+  end
+
   def imposter?
     impersonated_by.present?
+  end
+
+  def has_preference?(duty)
+    preferences.where(duty_id: duty).present?
+  end
+
+  def conditions_for_assignment(duty, last_selected)
+    [
+      has_preference?(duty),
+      self == last_selected,
+      duty_weight,
+      duty_count_by(duty.wday),
+      -preferences.size
+    ]
   end
 
 #  def inactive_message

@@ -47,4 +47,8 @@ class Duty < ActiveRecord::Base
   def preference_count
     preferences.size
   end
+
+  def wday
+    day.wday
+  end
 end

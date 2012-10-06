@@ -4,7 +4,11 @@ class UsersController < ApplicationController
 
   def index
     @users = User.order(:name)
-    @users = current_user.can_manage?(User) ? @users.includes(:roles) : @users.all
+    @users  = if current_user.can_manage?(User)
+      @users.includes(:roles)
+    else
+      @users.all
+    end
 
     if params[:filters].present?
       Array.wrap(params[:filters]).each do |filter|
@@ -29,7 +33,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
 
     if @user.save
-      redirect_to @user, notice: 'User was successfully created.'
+      redirect_to @user, notice: "Created #{@user}"
     else
       render :new
     end
@@ -38,7 +42,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
-      redirect_to @user, notice: 'User was successfully updated.'
+      redirect_to @user, notice: "Updated #{@user}"
     else
       render :edit
     end
@@ -48,13 +52,13 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
 
-    redirect_to users_url, notice: "#{@user.name}'s account was suspended"
+    redirect_to users_url, notice: "Archived #{@user}'s account"
   end
 
   def revive
     @user = User.find(params[:id])
     @user.revive
 
-    redirect_to users_url(deleted: true), notice: "#{@user.name}'s account was revived"
+    redirect_to users_url(deleted: true), notice: "Revived #{@user}'s account"
   end
 end
