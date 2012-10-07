@@ -1,6 +1,6 @@
 class DutiesController < ApplicationController
   before_filter :authenticate_user!
-  authorize_actions_for Duty
+  authorize_actions_for Duty, actions: { take: :update }
 
   def index
     @duties = Duty.includes(:users).all
@@ -8,6 +8,7 @@ class DutiesController < ApplicationController
 
   def show
     @duty = Duty.find(params[:id])
+    @users = User.on_rota
   end
 
   def new
@@ -42,5 +43,19 @@ class DutiesController < ApplicationController
     @duty = Duty.find(params[:id])
     @duty.destroy
     redirect_to duties_url
+  end
+
+  def take
+    Duty.where(id: params[:ids]).each do |duty|
+      user = duty.users.joins(:preferences).where(preferences: { duty_id: duty.id }).first
+      current_preference = duty.preferences.where(user_id: current_user.id)
+      if current_preference.present?
+        current_preference.destroy
+      end
+      duty.users.delete(user)
+      duty.users << current_user
+    end
+
+    redirect_to :back, notice: "These duties have been assigned to you"
   end
 end

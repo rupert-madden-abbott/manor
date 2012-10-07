@@ -7,7 +7,7 @@
         Add Preference
         %strong.caret
       %ul.dropdown-menu
-        - User.on_rota.each do |user|
+        - @users.each do |user|
           - preference = @duty.preferences.where(user_id: user.id).first
           - if preference.present?
             %li= button_to user.name, preference_path(preference), class: 'btn btn-danger', method: :delete
@@ -18,7 +18,7 @@
         Assign User
         %strong.caret
       %ul.dropdown-menu
-        - User.on_rota.each do |user|
+        - @users.each do |user|
           - user_ids = [*@duty.users]
           - if user_ids.delete(user)
             %li= button_to user.name, duty_path(@duty, duty: { user_ids: user_ids }), method: :put, class: 'btn btn-danger'

@@ -1,25 +1,35 @@
-- if current_user.can?(Rotum, :update, :delete)
-  - content_for :actionbar do
-    - if current_user.can_update? Rotum
-      - if @rotum.published?
-        %li= link_to "Unpublish", unpublish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
-      - elsif @rotum.assigned?
-        %li= link_to "Publish", publish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
-        %li= link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-danger"
-      - else
-        %li= link_to "Assign Duties", assign_rotum_path(@rotum), method: :put, class: "btn btn-primary"
-    - if current_user.can_delete? Rotum
-      %li= link_to_destroy(@rotum)
+- content_for :actionbar do
+  %li= link_to "Add Preference", add_preferences_path, method: :post, id: "add_preference", class: "btn btn-primary hide"
+  %li= link_to "Remove Preference", remove_preferences_path, method: :delete, id: "remove_preference", class: "btn btn-danger hide"
+  %li= link_to "Take", take_duties_path, method: :put, id: "take_duty", class: "btn btn-primary hide"
+  - if current_user.can_update? Rotum
+    - if @rotum.published?
+      %li= link_to "Unpublish", unpublish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+    - elsif @rotum.assigned?
+      %li= link_to "Publish", publish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+      %li= link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-danger"
+    - else
+      %li= link_to "Assign Duties", assign_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+  - if current_user.can_delete? Rotum
+    %li= link_to_destroy(@rotum)
 
 - content_for :infobar do
   %li
-    Click
+    Select duties using the checkboxes to do something with them:
+    %br
     %strong Add Preference
-    to request that a duty is not assigned to you or to let other senior residents know that you can't do a duty already assigned to you
+    to request that a duty is not assigned to you or let others take it from you
+    %br
+    %strong Take
+    a duty that another person can't do
   %li.divider
   %li.alert-success.alert
     %strong Green:
     This duty has been assigned to you
+  %li.divider
+  %li.alert-info.alert
+    %strong Blue:
+    You've asked not to do this duty
   %li.divider
   %li.alert-error.alert
     %strong Red:
@@ -27,7 +37,7 @@
   %li.divider
   %li.alert
     %strong Orange:
-    Another Senior Resident has asked not to do this duty but it's been assigned to them anyway. Help them out by offering to swap!
+    Another person has asked not to do this duty but it's been assigned to them anyway. Help them out by taking it from them.
 
 .center
   = header_for_show(@rotum)
@@ -65,13 +75,13 @@
 %table.table.datatable{ data: { paginate: "false", sort: "false" } }
   %thead
     %tr
+      - if current_user.has_role?(:rota)
+        %th.actions= check_box_tag "check_all"
       %th.right Date
       %th Time
       %th Name
       - if current_user.can?(Rotum, :update, :delete)
         %th Preferences
-      - if current_user.has_role?(:admin) || current_user.can?(Preference, :create, :delete)
-        %th.actions Actions
   %tbody
     - @rotum.duties.each do |duty|
       - if current_user.can?(Preference, :create, :delete)
@@ -84,9 +94,17 @@
           - klass = 'alert alert-error'
         - elsif assigned.present?
           - klass = 'alert alert-success'
+        - elsif preference.present?
+          - klass = 'alert alert-info'
         - elsif other_conflict.present?
-          - klass = 'alert'
+          - klass = 'alert conflict'
+        - if preference.present?
+          - klass += ' preference'
+        - if duty.day.today?
+          - klass += ' today'
       %tr{ class: klass }
+        - if current_user.has_role?(:rota)
+          %td.actions= check_box_tag "ids[]", duty.id, false, class: 'check_group'
         - if current_user.can_manage? Duty
           %td.right= link_to duty.day_str, duty_path(duty)
         - else
@@ -102,12 +120,3 @@
             %td None
           - else
             %td= preferences.map { |p| p.user.name }.join(", ")
-        - if preference.present?
-          %td.actions
-            = link_to_destroy(preference, "Remove Preference")
-        - elsif current_user.can_create?(Preference)
-          %td.actions
-            = simple_form_for Preference.new do |f|
-              = f.association :user, as: :hidden, input_html: { value: current_user.id }
-              = f.association :duty, as: :hidden, input_html: { value: duty.id }
-              = f.submit "Add Preference", class: 'btn btn-mini btn-primary'

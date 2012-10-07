@@ -17,6 +17,12 @@ body {
   }
 }
 
+table {
+  .today {
+    font-weight: bold
+  }
+}
+
 table form {
   margin-bottom: 0;
   display: inline-block;
@@ -147,3 +153,5 @@ table form {
     width: 100%
   }
 }
+
+.hide { display: none !important }

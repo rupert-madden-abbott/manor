@@ -5,8 +5,18 @@ Manor::Application.routes.draw do
 
   devise_for :users
 
-  resources :preferences
-  resources :duties
+  resources :preferences do
+    collection do
+      post :add
+      delete :remove
+    end
+  end
+
+  resources :duties do
+    collection do
+      put :take
+    end
+  end
   resources :events
   resources :roles
   resources :rota do

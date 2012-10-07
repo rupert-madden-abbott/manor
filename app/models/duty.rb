@@ -7,13 +7,14 @@ class Duty < ActiveRecord::Base
 
   resourcify
   include Authority::Abilities
+  self.authorizer_name = 'DutyAuthorizer'
 
   def to_s
     day_str
   end
 
   def day_str
-    day.strftime('%A %d %B %Y')
+    day.strftime('%A %d')
   end
 
   def starts_str
