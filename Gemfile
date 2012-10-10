@@ -36,6 +36,7 @@ group :development do
   gem 'quiet_assets'
   gem 'rails_best_practices'
   gem 'bullet'
+  gem 'sextant'
 end
 
 group :production do
