@@ -3,7 +3,7 @@ class Duty < ActiveRecord::Base
   has_and_belongs_to_many :users
   belongs_to :rotum
 
-  attr_accessible :day, :ends, :starts, :user_id, :user_ids
+  attr_accessible :day, :ends, :starts, :user_id, :user_ids, :rotum_id
 
   def to_s
     day_str
