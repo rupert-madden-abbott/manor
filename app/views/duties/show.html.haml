@@ -1,6 +1,7 @@
-- if current_user.can_manage? Duty
-  - content_for :actionbar do
+- content_for :actionbar do
+  - if can? :edit, Duty
     %li= link_to "Edit", edit_duty_path(@duty), class: 'btn btn-primary'
+  - if can? :delete, Duty
     %li= link_to "Destroy", duty_path(@duty), method: "delete", confirm: 'Are you sure?', class: 'btn btn-danger'
     %li.dropdown
       %a.dropdown-toggle{ href: '#', data: { toggle: "dropdown" } }

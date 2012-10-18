@@ -32,7 +32,7 @@ class DutiesController < ApplicationController
 
   def destroy
     @duty.destroy
-    redirect_to duties_url
+    redirect_to rotum_url(:current)
   end
 
   def take

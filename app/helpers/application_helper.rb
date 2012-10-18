@@ -100,4 +100,8 @@ module ApplicationHelper
       filter_dropdown_menu_for(model_class, *filters)
     end
   end
+
+  def bootstrap_form_for(record, &block)
+    simple_form_for(record, validate: true, html: { 'class' => 'form-horizontal' }, &block)
+  end
 end

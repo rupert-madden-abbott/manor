@@ -1,0 +1,7 @@
+= bootstrap_form_for duty do |f|
+  = f.input :starts
+  = f.input :ends
+  = f.input :day
+  = f.association :users, collection: User.on_rota.order(:name)
+  = f.association :rotum
+  = f.button :submit

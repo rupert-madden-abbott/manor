@@ -5,6 +5,8 @@
     %li= link_to "Remove Preference", remove_preferences_path, method: :delete, id: "remove_preference", class: "btn btn-danger hide"
   - if can? :take, Duty
     %li= link_to "Take", take_duties_path, method: :put, id: "take_duty", class: "btn btn-primary hide"
+  - if can? :create, Duty
+    %li= link_to "Add Duty", new_duty_path, class: "btn btn-primary"
   - if @rotum.published?
     - if can? :unpublish, @rotum
       %li= link_to "Unpublish", unpublish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
