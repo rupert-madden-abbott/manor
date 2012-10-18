@@ -9,9 +9,9 @@
       .nav-collapse
         - if user_signed_in?
           %ul.nav
-            - if current_user.can_read? User
+            - if can? :read, User
               = active_link_to 'Contacts', contacts_path, wrap_tag: :li
-            - if current_user.can_read? Rotum
+            - if can? :read, Rotum
               = active_link_to 'Rota', rota_path, wrap_tag: :li
           %ul.nav.pull-right
             %li
@@ -21,7 +21,7 @@
                 user_impersonator_path(current_user, |
                 current_user.impersonated_by), method: :delete
             - else
-              - if current_user.can_manage? User
+              - if users.present?
                 %li.dropdown
                   %a.dropdown-toggle{ data: { toggle: "dropdown" }, href: "#" }
                     Impersonate

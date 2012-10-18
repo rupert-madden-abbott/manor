@@ -5,10 +5,6 @@ class Duty < ActiveRecord::Base
 
   attr_accessible :day, :ends, :starts, :user_id, :user_ids
 
-  resourcify
-  include Authority::Abilities
-  self.authorizer_name = 'DutyAuthorizer'
-
   def to_s
     day_str
   end

@@ -1,6 +1,6 @@
 module ApplicationHelper
   def link_to_index(model, text = nil)
-    if current_user.can_read? model.class
+    if can? :read, model
       text ||= "View all #{model.class.name.pluralize}"
       path = send("#{model.class.name.downcase.pluralize}_path")
       link_to text, path, class: 'btn'
@@ -8,28 +8,28 @@ module ApplicationHelper
   end
 
   def link_to_show(model, text = nil)
-    if current_user.can_read? model.class
+    if can? :read, model
       text ||= model
       link_to text, model
     end
   end
 
   def link_to_new(model, text = "New")
-    if current_user.can_create? model.class
+    if can? :create, model
       path = send("new_#{model.class.name.downcase}_path")
       link_to text, path, class: 'btn btn-primary'
     end
   end
 
   def link_to_edit(model, text = "Edit")
-    if current_user.can_update? model.class
+    if can? :update, model
       path = send("edit_#{model.class.name.downcase}_path", model)
       link_to text, path, class: 'btn btn-mini'
     end
   end
 
   def link_to_destroy(model, text = "Delete", confirm = "Are you sure?")
-    if current_user.can_delete? model.class
+    if can? :destroy, model
       path = send("#{model.class.name.downcase}_path", model)
       klass = 'btn btn-danger btn-mini'
       link_to text, path, method: :delete, confirm: confirm, class: klass

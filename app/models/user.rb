@@ -1,8 +1,6 @@
 class User < ActiveRecord::Base
   devise :cas_authenticatable, :rememberable, :trackable
   rolify
-  include Authority::UserAbilities
-  include Authority::Abilities
 
   has_many :preferences, dependent: :destroy
   has_and_belongs_to_many :duties
@@ -18,9 +16,6 @@ class User < ActiveRecord::Base
   scope :active, not_deleted
   scope :on_rota, joins(:roles).where(roles: { name: :rota }).not_deleted
   scope :for_assignment, on_rota.includes(:duties, :preferences)
-
-
-  self.authorizer_name = 'UserAuthorizer'
 
   def to_s
     name
@@ -46,14 +41,6 @@ class User < ActiveRecord::Base
 
   def next_duty
     @next_duty ||= duties.where("day >= ?", Date.today).order('day asc').first
-  end
-
-  def can?(model, *actions)
-    actions.any? { |action| send("can_#{action}?", model) }
-  end
-
-  def can_write?(model)
-    can?(model, *[:create, :update, :delete])
   end
 
   def duty_weight

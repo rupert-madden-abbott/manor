@@ -4,8 +4,5 @@ class Role < ActiveRecord::Base
 
   attr_accessible :name
 
-  resourcify
-  include Authority::Abilities
-
   scopify
 end

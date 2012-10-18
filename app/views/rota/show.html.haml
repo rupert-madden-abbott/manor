@@ -1,16 +1,22 @@
 - content_for :actionbar do
-  %li= link_to "Add Preference", add_preferences_path, method: :post, id: "add_preference", class: "btn btn-primary hide"
-  %li= link_to "Remove Preference", remove_preferences_path, method: :delete, id: "remove_preference", class: "btn btn-danger hide"
-  %li= link_to "Take", take_duties_path, method: :put, id: "take_duty", class: "btn btn-primary hide"
-  - if current_user.can_update? Rotum
-    - if @rotum.published?
+  - if can? :add, Preference
+    %li= link_to "Add Preference", add_preferences_path, method: :post, id: "add_preference", class: "btn btn-primary hide"
+  - if can? :remove, Preference
+    %li= link_to "Remove Preference", remove_preferences_path, method: :delete, id: "remove_preference", class: "btn btn-danger hide"
+  - if can? :take, Duty
+    %li= link_to "Take", take_duties_path, method: :put, id: "take_duty", class: "btn btn-primary hide"
+  - if @rotum.published?
+    - if can? :unpublish, @rotum
       %li= link_to "Unpublish", unpublish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
-    - elsif @rotum.assigned?
+  - elsif @rotum.assigned?
+    - if can? :publish, @rotum
       %li= link_to "Publish", publish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
+    - if can? :unassign, @rotum
       %li= link_to "Unassign Duties", unassign_rotum_path(@rotum), method: :put, confirm: "Are you sure?", class: "btn btn-danger"
-    - else
+  - else
+    - if can? :assign, @rotum
       %li= link_to "Assign Duties", assign_rotum_path(@rotum), method: :put, class: "btn btn-primary"
-  - if current_user.can_delete? Rotum
+  - if can? :destroy, @rotum
     %li= link_to_destroy(@rotum)
 
 - content_for :infobar do
@@ -46,7 +52,7 @@
     = link_to_unless current_page?(rotum_path("current")), "Current", rotum_path("current")
     = link_to_if @rotum.next.present?, ">>", @rotum.next
 
-- if current_user.can? Rotum, :update, :delete
+- if can? :manage, Rotum
   %h3 Duties / Preferences Summary
   %table.table.datatable{ data: { paginate: "false", info: "false", filter: "false" } }
     %thead
@@ -75,46 +81,46 @@
 %table.table.datatable{ data: { paginate: "false", sort: "false" } }
   %thead
     %tr
-      - if current_user.has_role?(:rota)
+      - if can?([:add, :remove], Preference) || can?(:take, Duty)
         %th.actions= check_box_tag "check_all"
       %th.right Date
       %th Time
       %th Name
-      - if current_user.can?(Rotum, :update, :delete)
+      - if can? :manage, Rotum
         %th Preferences
   %tbody
     - @rotum.duties.each do |duty|
-      - if current_user.can?(Preference, :create, :delete)
+      - if can? :add, Preference
         - preference = current_user.find_preference_by_duty duty
       - assigned = duty.users.select { |user| user  == current_user }
       - other_conflict = duty.users.select { |user| user.find_preference_by_duty(duty) }
       - klass = ''
-      - if @rotum.published? || current_user.has_role?(:dw)
+      - if preference.present?
+        - klass = 'alert alert-info'
+      - if @rotum.published? || can?(:manage, Rotum)
         - if assigned.present? && preference.present?
           - klass = 'alert alert-error'
         - elsif assigned.present?
           - klass = 'alert alert-success'
-        - elsif preference.present?
-          - klass = 'alert alert-info'
         - elsif other_conflict.present?
           - klass = 'alert conflict'
-        - if preference.present?
-          - klass += ' preference'
-        - if duty.day.today?
-          - klass += ' today'
+      - if preference.present?
+        - klass += ' preference'
+      - if duty.day.today?
+        - klass += ' today'
       %tr{ class: klass }
-        - if current_user.has_role?(:rota)
+        - if can?([:add, :remove], Preference) || can?(:take, Duty)
           %td.actions= check_box_tag "ids[]", duty.id, false, class: 'check_group'
-        - if current_user.can_manage? Duty
+        - if can? :read, Duty
           %td.right= link_to duty.day_str, duty_path(duty)
         - else
           %td.right= duty.day_str
         %td= duty.times_str
-        - if duty.users.empty? || (!@rotum.published? && !current_user.has_role?(:dw))
+        - if duty.users.empty? || (!@rotum.published? && cannot?(:manage, Rotum))
           %td Unassigned
         - else
           %td= duty.users.map { |user| user.name }.join(", ")
-        - if current_user.can?(Rotum, :update, :delete)
+        - if can? :manage, Rotum
           - preferences = duty.preferences
           - if preferences.empty?
             %td None

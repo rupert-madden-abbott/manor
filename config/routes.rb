@@ -5,14 +5,14 @@ Manor::Application.routes.draw do
 
   devise_for :users
 
-  resources :preferences do
+  resources :preferences, only: [:create, :destroy] do
     collection do
       post :add
       delete :remove
     end
   end
 
-  resources :duties do
+  resources :duties, except: :index do
     collection do
       put :take
     end

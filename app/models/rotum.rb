@@ -3,10 +3,6 @@ class Rotum < ActiveRecord::Base
 
   attr_accessible :ends, :starts
 
-  resourcify
-  include Authority::Abilities
-  self.authorizer_name = 'RotumAuthorizer'
-
   scope :current, where("ends > ?", Date.today).order(:ends).limit(1)
   scope :complete, includes(duties: { users: :preferences })
   scope :admin, includes(duties: { preferences: [:user, { duty: :rotum }] })

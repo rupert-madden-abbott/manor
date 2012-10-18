@@ -7,7 +7,7 @@ gem 'thin'
 gem 'devise'
 gem 'devise_cas_authenticatable', '1.1.2'
 gem 'rolify'
-gem 'authority'
+gem 'cancan'
 
 gem 'permanent_records'
 

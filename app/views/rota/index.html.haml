@@ -1,5 +1,5 @@
-- if current_user.can_create? Rotum
-  - content_for :actionbar do
+- content_for :actionbar do
+  - if can? :create, Rotum
     %li= link_to 'New Rotum', new_rotum_path, class: 'btn btn-primary'
 
 = header_for_index(Rotum)
@@ -7,13 +7,13 @@
 %table.table.table-striped
   %tr
     %th Name
-    - if current_user.can? Rotum, :update, :delete
+    - if can? :manage, Rotum
       %th.manage Actions
 
   - @rota.each do |rotum|
     %tr
       %td= link_to_show rotum
-      - if current_user.can? Rotum, :update, :delete
+      - if can? :manage, Rotum
         %td.actions
           = link_to_edit rotum
           = link_to_destroy rotum

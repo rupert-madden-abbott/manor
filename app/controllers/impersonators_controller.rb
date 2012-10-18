@@ -1,7 +1,7 @@
 class ImpersonatorsController < ApplicationController
+  authorize_resource class: false
   prepend_before_filter { env["devise.skip_trackable"] = true }
   before_filter :authenticate_user!
-  authorize_actions_for ImpersonatorAuthorizer
 
   def new
     session[:admin_id] = current_user.id

@@ -1,11 +1,11 @@
 - if user_signed_in?
   %ul.thumbnails
-    - if current_user.can_read? Rotum
+    - if can? :read, Rotum
       %li.span4
         .thumbnail
           .caption
             %h2 Duty Rota
-            - if current_user.has_role? :rota
+            - if can? :take_duties, Rotum
               - if current_user.next_duty.present?
                 %p
                   Your next duty is on
@@ -15,7 +15,7 @@
               %p You can add preferences by checking the rota
           %p.center.well
             = link_to "Check the Rota", rotum_path(:current), class: 'btn'
-    - if current_user.can_read? User
+    - if can? :read, User
       %li.span4
         .thumbnail
           .caption

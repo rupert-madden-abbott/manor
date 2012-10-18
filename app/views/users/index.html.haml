@@ -1,6 +1,7 @@
-- if current_user.can_create? User
-  - content_for :actionbar do
+- content_for :actionbar do
+  - if can? :create, User
     %li= link_to "New User", new_user_path, class: 'btn btn-primary'
+  - if can? :destroy, User
     = filter_dropdown_for(User, :archived)
 
 .page-header
@@ -22,7 +23,7 @@
         %th Extension
         %th Residence
         %th Responsibilities
-        - if current_user.can? User, :update, :delete
+        - if can? :manage, User
           %th Username
           %th Roles
           %th Sign in count
@@ -38,7 +39,7 @@
           %td= user.extension
           %td= user.residence
           %td= user.responsibilites
-          - if current_user.can? User, :update, :delete
+          - if can? :manage, User
             %td= user.username
             %td= user.role_names
             %td= user.sign_in_count
