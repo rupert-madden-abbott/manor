@@ -15,24 +15,17 @@ class EventsController < ApplicationController
   end
 
   def create
-    if @event.save
-      redirect_to @event, notice: 'event was successfully created.'
-    else
-      render :new
-    end
+    @event.save
+    respond_with @event
   end
 
   def update
-    if @event.update_attributes(params[:event])
-      redirect_to @event, notice: 'event was successfully updated.'
-    else
-      render :edit
-    end
+    @event.update_attributes(params[:event])
+    respond_with @event
   end
 
   def destroy
     @event.destroy
-
-    redirect_to events_url
+    respond_with @event
   end
 end

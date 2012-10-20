@@ -15,24 +15,17 @@ class RolesController < ApplicationController
   end
 
   def create
-    if @role.save
-      redirect_to @role, notice: 'role was successfully created.'
-    else
-      render :new
-    end
+    @role.save
+    respond_with(@role)
   end
 
   def update
-    if @role.update_attributes(params[:role])
-      redirect_to @role, notice: 'role was successfully updated.'
-    else
-      render :edit
-    end
+    @role.update_attributes(params[:role])
+    respond_with(@role)
   end
 
   def destroy
     @role.destroy
-
-    redirect_to roles_url
+    respond_with(@role)
   end
 end

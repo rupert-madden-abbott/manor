@@ -4,17 +4,13 @@ class PreferencesController < ApplicationController
   skip_load_resource only: [:add, :remove]
 
   def create
-    if @preference.save
-      redirect_to :back, notice: 'Preference added.'
-    else
-      render :new
-    end
+    @preference.save
+    respond_with(@preference, :back)
   end
 
   def destroy
     @preference.destroy
-
-    redirect_to :back, notice: 'Preference removed.'
+    respond_with(@destroy, :back)
   end
 
   def add

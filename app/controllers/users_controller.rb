@@ -28,25 +28,18 @@ class UsersController < ApplicationController
   end
 
   def create
-    if @user.save
-      redirect_to @user, notice: "Created #{@user}"
-    else
-      render :new
-    end
+    @user.save
+    respond_with(@user)
   end
 
   def update
-    if @user.update_attributes(params[:user])
-      redirect_to @user, notice: "Updated #{@user}"
-    else
-      render :edit
-    end
+    @user.update_attributes(params[:user])
+    respond_with(@user)
   end
 
   def destroy
     @user.destroy
-
-    redirect_to users_url, notice: "Archived #{@user}'s account"
+    respond_with(@user)
   end
 
   def revive

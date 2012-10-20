@@ -1,20 +1,9 @@
 class RotaController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :find_relative_rotum, only: :show
   load_and_authorize_resource
   skip_load_resource only: [:assign, :unassign]
 
   def index
-  end
-
-  def show
-    if @rotum.blank?
-      redirect_to rota_path, notice: "Rota does not exist"
-    end
-
-    if can? :manage, @rotum
-      @users = User.for_assignment.includes(preferences: { duty: :rotum } )
-    end
   end
 
   def new
@@ -24,25 +13,18 @@ class RotaController < ApplicationController
   end
 
   def create
-    if @rotum.create_with_duties
-      redirect_to @rotum, notice: 'Rotum was successfully created.'
-    else
-      render :new
-    end
+    @rotum.create_with_duties
+    respond_with(@rotum)
   end
 
   def update
-    if @rotum.update_attributes(params[:rotum])
-      redirect_to @rotum, notice: 'Rotum was successfully updated.'
-    else
-      render :edit
-    end
+    @rotum.update_attributes(params[:rotum])
+    respond_with(@rotum)
   end
 
   def destroy
     @rotum.destroy
-
-    redirect_to rota_url
+    respond_with(@destroy)
   end
 
   def assign
