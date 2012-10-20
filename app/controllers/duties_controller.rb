@@ -18,9 +18,11 @@ class DutiesController < ApplicationController
   end
 
   def new
+    @users = User.on_rota.order(:name)
   end
 
   def edit
+    @users = User.on_rota.order(:name)
   end
 
   def create
