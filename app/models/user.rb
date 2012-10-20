@@ -79,6 +79,11 @@ class User < ActiveRecord::Base
     ]
   end
 
+  def ability
+    @ability ||= Ability.new(self)
+  end
+  delegate :can?, :cannot?, to: :ability
+
 #  def inactive_message
 #    self.deleted_at.nil? ? super : :account_has_been_deactivated
 #  end

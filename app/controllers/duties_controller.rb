@@ -1,51 +1,54 @@
 class DutiesController < ApplicationController
   before_filter :authenticate_user!
-  load_and_authorize_resource
+  before_filter :find_relative_rotum, only: :index
+  load_and_authorize_resource :rotum
+  load_and_authorize_resource :duty, through: :rotum
   skip_load_resource only: :take
+
+  respond_to :html
+
+  def index
+    if can? :manage, @rotum
+      @users = User.for_assignment.includes(preferences: { duty: :rotum } )
+    end
+  end
 
   def show
     @users = User.on_rota
   end
 
   def new
-    @duties = Duty.all
   end
 
   def edit
   end
 
   def create
-    if @duty.save
-      redirect_to @duty, notice: 'Duty was successfully created.'
-    else
-      render :new
-    end
+    @duty.save
+    respond_with(@rotum, @duty)
   end
 
   def update
-    if @duty.update_attributes(params[:duty])
-      redirect_to @duty, notice: 'Duty was successfully updated.'
-    else
-      render :edit
-    end
+    @duty.update_attributes(params[:duty])
+    respond_with(@rotum, @duty)
   end
 
   def destroy
     @duty.destroy
-    redirect_to rotum_url(:current)
+    respond_with(@rotum, @duty)
   end
 
   def take
     Duty.where(id: params[:ids]).each do |duty|
-      user = duty.users.joins(:preferences).where(preferences: { duty_id: duty.id }).first
-      current_preference = duty.preferences.where(user_id: current_user.id)
-      if current_preference.present?
-        current_preference.destroy
-      end
-      duty.users.delete(user)
-      duty.users << current_user
+      duty.take(current_user)
     end
 
-    redirect_to :back, notice: "These duties have been assigned to you"
+    redirect_to rotum_duties_path(@rotum), notice: "These duties have been assigned to you"
+  end
+
+  private
+  def find_relative_rotum
+    @rotum = Rotum.find_by_relative(params[:rotum_id], current_user)
+    @duties = @rotum.duties
   end
 end

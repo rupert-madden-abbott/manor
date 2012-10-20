@@ -79,19 +79,6 @@ class RotaController < ApplicationController
   private
 
   def find_relative_rotum
-    @rotum = Rotum.complete
-    if can? :manage, @rotum
-      @rotum = @rotum.admin
-    end
-    @rotum = case params[:id]
-      when 'current'
-        @rotum.current.first
-      when 'next'
-        @rotum.next.first
-      when 'previous'
-        @rotum.previous.first
-      else
-        @rotum.find(params[:id])
-    end
+    @rotum = Rotum.find_by_relative(params[:id], current_user)
   end
 end

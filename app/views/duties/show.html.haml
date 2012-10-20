@@ -1,8 +1,8 @@
 - content_for :actionbar do
   - if can? :edit, Duty
-    %li= link_to "Edit", edit_duty_path(@duty), class: 'btn btn-primary'
+    %li= link_to "Edit", edit_rotum_duty_path(@rotum, @duty), class: 'btn btn-primary'
   - if can? :delete, Duty
-    %li= link_to "Destroy", duty_path(@duty), method: "delete", confirm: 'Are you sure?', class: 'btn btn-danger'
+    %li= link_to "Destroy", rotum_duty_path(@rotum, @duty), method: "delete", confirm: 'Are you sure?', class: 'btn btn-danger'
     %li.dropdown
       %a.dropdown-toggle{ href: '#', data: { toggle: "dropdown" } }
         Add Preference
@@ -22,10 +22,10 @@
         - @users.each do |user|
           - user_ids = [*@duty.users]
           - if user_ids.delete(user)
-            %li= button_to user.name, duty_path(@duty, duty: { user_ids: user_ids }), method: :put, class: 'btn btn-danger'
+            %li= button_to user.name, rotum_duty_path(@rotum, @duty, duty: { user_ids: user_ids }), method: :put, class: 'btn btn-danger'
           - else
             - user_ids << user
-            %li= button_to user.name, duty_path(@duty, duty: { user_ids: user_ids }), method: :put, class: 'btn btn-success'
+            %li= button_to user.name, rotum_duty_path(@rotum, @duty, duty: { user_ids: user_ids }), method: :put, class: 'btn btn-success'
 
 .page-header
   %h1= @duty.day_str

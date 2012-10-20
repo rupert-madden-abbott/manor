@@ -48,4 +48,19 @@ class Duty < ActiveRecord::Base
   def wday
     day.wday
   end
+
+  def conflicts
+    users.joins(:preferences).where(preferences: { duty_id: id })
+  end
+
+  def swap(swapped_out, swapped_in)
+    preference = preferences.where(user_id: swapped_in.id)
+    preference.destroy if preference.present?
+    users.delete(swapped_out)
+    users << swapped_in
+  end
+
+  def take(user)
+    swap(conflicts.first, user)
+  end
 end

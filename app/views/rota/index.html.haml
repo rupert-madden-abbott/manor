@@ -12,7 +12,7 @@
 
   - @rota.each do |rotum|
     %tr
-      %td= link_to_show rotum
+      %td= link_to rotum, rotum_duties_path(rotum)
       - if can? :manage, Rotum
         %td.actions
           = link_to_edit rotum

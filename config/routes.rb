@@ -12,14 +12,14 @@ Manor::Application.routes.draw do
     end
   end
 
-  resources :duties, except: :index do
-    collection do
-      put :take
-    end
-  end
   resources :events
   resources :roles
-  resources :rota do
+  resources :rota, except: :show do
+    resources :duties do
+      collection do
+        put :take
+      end
+    end
     member do
       put :assign
       put :unassign

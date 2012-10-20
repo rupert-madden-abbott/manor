@@ -10,6 +10,7 @@ gem 'rolify'
 gem 'cancan'
 
 gem 'permanent_records'
+gem 'responders'
 
 gem 'haml-rails'
 gem 'simple_form'

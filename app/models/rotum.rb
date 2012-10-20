@@ -9,6 +9,19 @@ class Rotum < ActiveRecord::Base
   scope :next, where("starts >= ?", Date.today).order(:starts).limit(1)
   scope :previous, where("ends <= ?", Date.today).order(:starts).limit(1)
 
+  def self.find_by_relative(id, user)
+    rotum = complete
+    if user.can? :manage, rotum
+      rotum = rotum.admin
+    end
+
+    if %w(next current previous).include? id
+      rotum.send(id).first
+    else
+      rotum.find(id)
+    end
+  end
+
   def next(offset = 0)
     self.class.where("starts >= ?", ends).order(:starts).offset(offset).first
   end

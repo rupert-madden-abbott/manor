@@ -4,9 +4,9 @@
   - if can? :remove, Preference
     %li= link_to "Remove Preference", remove_preferences_path, method: :delete, id: "remove_preference", class: "btn btn-danger hide"
   - if can? :take, Duty
-    %li= link_to "Take", take_duties_path, method: :put, id: "take_duty", class: "btn btn-primary hide"
+    %li= link_to "Take", take_rotum_duties_path(@rotum), method: :put, id: "take_duty", class: "btn btn-primary hide"
   - if can? :create, Duty
-    %li= link_to "Add Duty", new_duty_path, class: "btn btn-primary"
+    %li= link_to "Add Duty", new_rotum_duty_path(@rotum), class: "btn btn-primary"
   - if @rotum.published?
     - if can? :unpublish, @rotum
       %li= link_to "Unpublish", unpublish_rotum_path(@rotum), method: :put, class: "btn btn-primary"
@@ -51,7 +51,7 @@
   = header_for_show(@rotum)
   %h2.nav
     = link_to_if @rotum.previous.present?, "<<", @rotum.previous
-    = link_to_unless current_page?(rotum_path("current")), "Current", rotum_path("current")
+    = link_to_unless current_page?(rotum_duties_path("current")), "Current", rotum_duties_path("current")
     = link_to_if @rotum.next.present?, ">>", @rotum.next
 
 - if can? :manage, Rotum
@@ -91,7 +91,7 @@
       - if can? :manage, Rotum
         %th Preferences
   %tbody
-    - @rotum.duties.each do |duty|
+    - @duties.each do |duty|
       - if can? :add, Preference
         - preference = current_user.find_preference_by_duty duty
       - assigned = duty.users.select { |user| user  == current_user }
@@ -114,7 +114,7 @@
         - if can?([:add, :remove], Preference) || can?(:take, Duty)
           %td.actions= check_box_tag "ids[]", duty.id, false, class: 'check_group'
         - if can? :read, Duty
-          %td.right= link_to duty.day_str, duty_path(duty)
+          %td.right= link_to duty.day_str, rotum_duty_path(@rotum, duty)
         - else
           %td.right= duty.day_str
         %td= duty.times_str
@@ -123,8 +123,7 @@
         - else
           %td= duty.users.map { |user| user.name }.join(", ")
         - if can? :manage, Rotum
-          - preferences = duty.preferences
-          - if preferences.empty?
+          - if duty.preferences.empty?
             %td None
           - else
-            %td= preferences.map { |p| p.user.name }.join(", ")
+            %td= duty.preferences.map { |p| p.user.name }.join(", ")
