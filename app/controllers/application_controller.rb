@@ -17,11 +17,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :populate_impersonated
 
-  def time(hour = 0, min = 0)
-    Time.now.utc.change({ hour: hour, min: min })
-  end
-  helper_method :time
-
   def populate_impersonated
     if user_signed_in? && can?(:manage, User)
       @impersonated = Role.includes(:users).order("roles.name, users.name").all

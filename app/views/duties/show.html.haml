@@ -33,9 +33,9 @@
 %p
   %strong Users
   %br
-  = @duty.users.map { |user| user.name }.join(", ")
+  = @duty.user_names
 
 %p
   %strong Preferences
   %br
-  = @duty.preferences.map { |preference| preference.user.name }.join(", ")
+  = @duty.preferences_user_names

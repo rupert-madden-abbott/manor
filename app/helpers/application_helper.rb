@@ -7,20 +7,6 @@ module ApplicationHelper
     end
   end
 
-  def link_to_show(model, text = nil)
-    if can? :read, model
-      text ||= model
-      link_to text, model
-    end
-  end
-
-  def link_to_new(model, text = "New")
-    if can? :create, model
-      path = send("new_#{model.class.name.downcase}_path")
-      link_to text, path, class: 'btn btn-primary'
-    end
-  end
-
   def link_to_edit(model, text = "Edit")
     if can? :update, model
       path = send("edit_#{model.class.name.downcase}_path", model)

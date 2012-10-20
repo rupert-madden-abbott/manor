@@ -57,10 +57,4 @@ class RotaController < ApplicationController
 
     redirect_to @rotum, notice: "Rota unpublished"
   end
-
-  private
-
-  def find_relative_rotum
-    @rotum = Rotum.find_by_relative(params[:id], current_user)
-  end
 end

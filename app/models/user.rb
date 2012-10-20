@@ -17,6 +17,22 @@ class User < ActiveRecord::Base
   scope :on_rota, joins(:roles).where(roles: { name: :rota }).not_deleted
   scope :for_assignment, on_rota.includes(:duties, :preferences)
 
+  def self.filter_by(user, filters = nil)
+    users = order(:name)
+    users = if user.can? :manage, User
+      users.includes(:roles)
+    else
+      users.all
+    end
+
+    if filters.present?
+      Array.wrap(filters).each do |filter|
+        users = users.send(filter)
+      end
+    end
+    users
+  end
+
   def to_s
     name
   end
@@ -45,16 +61,6 @@ class User < ActiveRecord::Base
 
   def duty_weight
     duties.sum { |duty| duty.weight }
-  end
-
-  def days_to_duty(date)
-    close_duties = duties.where("day <= ? AND day >= ?", date + 6, date - 6)
-    if close_duties.present?
-      duty = close_duties.min_by { |duty| (duty.day - date).abs }
-      (duty.day - date).abs
-    else
-      7
-    end
   end
 
   def duty_count_by(wday)

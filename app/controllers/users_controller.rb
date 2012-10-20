@@ -1,21 +1,10 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
 
+  before_filter :load_users, only: :index
   load_and_authorize_resource
 
   def index
-    @users = @users.order(:name)
-    @users = if can? :manage, User
-      @users.includes(:roles)
-    else
-      @users.all
-    end
-
-    if params[:filters].present?
-      Array.wrap(params[:filters]).each do |filter|
-        @users = @users.send(filter)
-      end
-    end
   end
 
   def show
@@ -46,5 +35,10 @@ class UsersController < ApplicationController
     @user.revive
 
     redirect_to users_url(deleted: true), notice: "Revived #{@user}'s account"
+  end
+
+  private
+  def load_users
+    @users = User.filter_by(current_user, params[:filters])
   end
 end

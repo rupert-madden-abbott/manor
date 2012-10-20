@@ -74,7 +74,7 @@
               - Date::DAYNAMES[duty.day.wday] == day
             - end.size
             - preference_count = user.preferences.select do |preference|
-              - Date::DAYNAMES[preference.duty.day.wday] == day
+              - Date::DAYNAMES[preference.day.wday] == day
             - end.size
             %td= "#{duty_count} / #{preference_count}"
           %td= "#{user.duties.size} / #{user.preferences.size}"

@@ -33,10 +33,6 @@ class Duty < ActiveRecord::Base
     day.sunday?
   end
 
-  def weekend?
-    day.saturday? || day.sunday?
-  end
-
   def weight
     ((starts - ends) / 1.hour).round
   end
@@ -62,5 +58,13 @@ class Duty < ActiveRecord::Base
 
   def take(user)
     swap(conflicts.first, user)
+  end
+
+  def user_names
+    users.map { |user| user.name }.join(", ")
+  end
+
+  def preferences_user_names
+    preferences.map { |preference| preference.user_name }.join(", ")
   end
 end
