@@ -111,6 +111,7 @@ $ ->
         onleaveavailable: => $(@).removeClass('alert-warning conflict')
         onconflicted: => $(@).addClass('alert-error')
         onleaveconflicted: => $(@).removeClass('alert-error')
+        onunassigned: => $(@).removeClass('alert')
     $(@).data('state', state)
 
   check_group = duties.find('.check_group')
