@@ -50,9 +50,11 @@
 .center
   = header_for_show(@rotum)
   %h2.nav
-    = link_to_if @rotum.previous.present?, "<<", @rotum.previous
+    - if @rotum.previous.present?
+      = link_to "<<", rotum_duties_path(@rotum.previous)
     = link_to_unless current_page?(rotum_duties_path("current")), "Current", rotum_duties_path("current")
-    = link_to_if @rotum.next.present?, ">>", @rotum.next
+    - if @rotum.next.present?
+      = link_to ">>", rotum_duties_path(@rotum.next)
 
 - if can? :manage, Rotum
   %h3 Duties / Preferences Summary
