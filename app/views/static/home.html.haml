@@ -14,7 +14,7 @@
                 %p You don't have any upcoming duties!
               %p You can add preferences by checking the rota
           %p.center.well
-            = link_to "Check the Rota", rotum_path(:current), class: 'btn'
+            = link_to "Check the Rota", rotum_duties_path(:current), class: 'btn'
     - if can? :read, User
       %li.span4
         .thumbnail
