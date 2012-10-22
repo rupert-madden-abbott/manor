@@ -5,14 +5,14 @@ class Ability
     can :home, :static
     can :destroy, :impersonator
     if user && !user.deleted?
-      can :destroy, Preference, user_id: user.id
-      can :remove, Preference, user_id: user.id
+      can :delete, Preference, user_id: user.id
 
       if user.has_any_role? :staff, :dw, :sr
         can :read, User
       end
 
       if user.has_any_role? :staff, :sr, :rota
+        can :read, Duty
         can :read, Rotum
       end
 
@@ -23,7 +23,7 @@ class Ability
 
       if user.has_role? :rota
         can :take, Duty
-        can [:create, :add], Preference
+        can :create, Preference
       end
 
       if user.has_role? :admin

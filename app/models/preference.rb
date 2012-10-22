@@ -5,4 +5,6 @@ class Preference < ActiveRecord::Base
   delegate :day, to: :duty
 
   attr_accessible :user_id, :duty_id, :user, :duty
+
+  validates_uniqueness_of :user_id, scope: :duty_id
 end

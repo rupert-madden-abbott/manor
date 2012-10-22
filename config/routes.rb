@@ -16,7 +16,7 @@ Manor::Application.routes.draw do
   resources :roles
   resources :rota, except: :show do
     resources :duties do
-      collection do
+      member do
         put :take
       end
     end

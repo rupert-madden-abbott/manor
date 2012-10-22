@@ -11,6 +11,8 @@ gem 'cancan'
 
 gem 'permanent_records'
 gem 'responders'
+gem 'batch_api'
+gem 'yajl-ruby'
 
 gem 'haml-rails'
 gem 'simple_form'
@@ -26,6 +28,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'twitter-bootstrap-rails', '2.1.3'
   gem 'jquery-datatables-rails'
+  gem 'javascript-state-machine-rails'
 end
 
 group :development do

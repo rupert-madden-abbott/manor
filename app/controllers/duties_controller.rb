@@ -41,11 +41,9 @@ class DutiesController < ApplicationController
   end
 
   def take
-    Duty.where(id: params[:ids]).each do |duty|
-      duty.take(current_user)
-    end
-
-    redirect_to rotum_duties_path(@rotum), notice: "These duties have been assigned to you"
+    @duty = Duty.find(params[:id])
+    @duty.take(current_user)
+    respond_with(@rotum, @duty)
   end
 
   private

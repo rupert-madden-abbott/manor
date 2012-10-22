@@ -1,10 +1,10 @@
 - content_for :actionbar do
-  - if can? :add, Preference
-    %li= link_to "Add Preference", add_preferences_path, method: :post, id: "add_preference", class: "btn btn-primary hide"
-  - if can? :remove, Preference
-    %li= link_to "Remove Preference", remove_preferences_path, method: :delete, id: "remove_preference", class: "btn btn-danger hide"
+  - if can? :create, Preference
+    %li= link_to "Add Preference", preferences_path, method: :post, class: "btn btn-primary hide", data: { transition: "add_preference", attribute: "duty_id" }
+  - if can? :delete, Preference
+    %li= link_to "Remove Preference", preferences_path, method: :delete, class: "btn btn-danger hide", data: { transition: "remove_preference", attribute: "preference_id" }
   - if can? :take, Duty
-    %li= link_to "Take", take_rotum_duties_path(@rotum), method: :put, id: "take_duty", class: "btn btn-primary hide"
+    %li= link_to "Take", take_rotum_duty_path(@rotum, "placeholder"), method: :put, class: "btn btn-primary hide", data: { transition: "take_duty", attribute: "duty_id", params: %Q({ "user_id": "#{current_user.id}" }) }
   - if can? :create, Duty
     %li= link_to "Add Duty", new_rotum_duty_path(@rotum), class: "btn btn-primary"
   - if @rotum.published?
@@ -92,27 +92,38 @@
         %th Preferences
   %tbody
     - @duties.each do |duty|
-      - if can? :add, Preference
+      - if can? :create, Preference
         - preference = current_user.find_preference_by_duty duty
       - assigned = duty.users.select { |user| user  == current_user }
       - other_conflict = duty.users.select { |user| user.find_preference_by_duty(duty) }
       - klass = ''
       - if preference.present?
-        - klass = 'alert alert-info'
+        - klass = 'alert alert-info preference'
+        - state = 'rejected'
+      - else
+        - state = 'unassigned'
       - if @rotum.published? || can?(:manage, Rotum)
-        - if assigned.present? && preference.present?
-          - klass = 'alert alert-error'
-        - elsif assigned.present?
-          - klass = 'alert alert-success'
+        - if assigned.present?
+          - if preference.present?
+            - klass = 'alert alert-error preference'
+            - state = 'conflicted'
+          - else
+            - klass = 'alert alert-success'
+            - state = 'assigned'
         - elsif other_conflict.present?
-          - klass = 'alert conflict'
-      - if preference.present?
-        - klass += ' preference'
+          - if preference.present?
+            - klass = 'alert alert-info preference'
+            - state = 'unavailable'
+          - else
+            - klass = 'alert alert-warning conflict'
+            - state = 'available'
       - if duty.day.today?
         - klass += ' today'
-      %tr{ class: klass }
+      - klass += ' duty'
+      - preference_id = preference.present? ? preference.id : nil
+      %tr{ class: klass, data: { id: duty.id, duty_id: duty.id, preference_id: preference_id, state: state, params: %Q({ "duty_id": "#{duty.id}" }) } }
         - if can?([:add, :remove], Preference) || can?(:take, Duty)
-          %td.actions= check_box_tag "ids[]", duty.id, false, class: 'check_group'
+          %td.actions= check_box_tag "duty_ids", duty.id, false, class: 'check_group', data: { attribute: 'duty_id' }
         - if can? :read, Duty
           %td.right= link_to duty.day_str, rotum_duty_path(@rotum, duty)
         - else
