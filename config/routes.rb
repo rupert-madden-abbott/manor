@@ -2,6 +2,9 @@ Manor::Application.routes.draw do
 
   root to: 'static#home'
   match 'contacts' => 'users#index', as: :contacts
+  match 'rota/current' => 'duties#index', rotum_id: 'current'
+  match 'rota/next' => 'duties#index', rotum_id: 'next'
+  match 'rota/previous' => 'duties#index', rotum_id: 'previous'
 
   devise_for :users
 
