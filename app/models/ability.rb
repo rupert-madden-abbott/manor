@@ -5,7 +5,7 @@ class Ability
     can :home, :static
     can :destroy, :impersonator
     if user && !user.deleted?
-      can :delete, Preference, user_id: user.id
+      can :destroy, Preference, user_id: user.id
 
       if user.has_any_role? :staff, :dw, :sr
         can :read, User

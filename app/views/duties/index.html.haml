@@ -1,7 +1,7 @@
 - content_for :actionbar do
   - if can? :create, Preference
     %li= link_to "Add Preference", preferences_path, method: :post, class: "btn btn-primary hide", data: { transition: "add_preference", attribute: "duty_id" }
-  - if can? :delete, Preference
+  - if can? :destroy, Preference
     %li= link_to "Remove Preference", preferences_path, method: :delete, class: "btn btn-danger hide", data: { transition: "remove_preference", attribute: "preference_id" }
   - if can? :take, Duty
     %li= link_to "Take", take_rotum_duty_path(@rotum, "placeholder"), method: :put, class: "btn btn-primary hide", data: { transition: "take_duty", attribute: "duty_id", params: %Q({ "user_id": "#{current_user.id}" }) }
