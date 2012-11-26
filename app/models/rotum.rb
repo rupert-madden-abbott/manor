@@ -93,14 +93,15 @@ class Rotum < ActiveRecord::Base
   def assign_duties
     users = User.for_assignment
 
-    last_selected = nil
+    last_selected = []
     duties.each do |duty|
       selected = users.min_by do |user|
         user.conditions_for_assignment(duty, last_selected)
       end
 
       selected.duties << duty
-      last_selected = selected
+      last_selected.shift if last_selected.length > 2
+      last_selected << selected
     end
 
     self.assigned = true
