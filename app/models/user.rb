@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
   def conditions_for_assignment(duty, last_selected)
     [
       has_preference?(duty),
-      last_selected.include?(self),
+      last_selected.index(self) || -1,
       duty_weight,
       duty_count_by(duty.wday),
       -preferences.size
